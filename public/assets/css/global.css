@@ -1,0 +1,192 @@
+
+/* RESET */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ROOT */
+:root {
+    --topbar-height: 60px;
+    --sidebar-width: 230px;
+
+    --primary: #1b3e77; 
+    --primary-light: #cfe9ff;
+
+    --bg-page: #f3f4f6;
+    --bg-white: #ffffff;
+
+    --text-main: #2c2c2c;
+    --text-muted: #6b7280;
+
+    --border: #e5e7eb;
+
+    --radius: 14px;
+}
+
+/* BASE */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--bg-page);
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--topbar-height);
+    background: #1b3e77;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.logo-white {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.topbar .logo-text {
+    color: #ffffff !important;
+}
+
+.logo-img {
+    height: 34px;
+}
+
+.logo-text {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.sidebar {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--topbar-height));
+    background: var(--bg-white);
+    border-right: 1px solid var(--border);
+    padding: 0; /* PENTING: biar ga ngambang */
+    z-index: 999;
+}
+
+/* MENU */
+.sidebar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.menu-item {
+    width: 100%;
+}
+
+/* LINK MENU */
+.menu-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+    padding: 12px 16px;
+
+    color: var(--text-main);
+    font-size: 14px;
+
+    border-radius: 0; 
+    transition: 0.2s;
+}
+
+/* ICON */
+.menu-icon {
+    font-size: 16px;
+    min-width: 20px;
+}
+
+/* HOVER */
+.menu-toggle:hover {
+    background: #eff6ff; 
+    color: var(--primary);
+}
+
+/* ACTIVE */
+.menu-toggle.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+
+    border-left: 4px solid var(--primary);
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+.main-content {
+    margin-top: var(--topbar-height);
+    padding: 30px;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+.card-box {
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 992px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 16px;
+    }
+}
+
+.sidebar-toggle {
+    display: none;
+    font-size: 16px;
+    background: none;
+    border: none;
+}
+
+/* tampil hanya di mobile */
+@media (max-width: 992px) {
+    .sidebar-toggle {
+        display: block;
+    }
+}

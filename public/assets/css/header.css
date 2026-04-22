@@ -1,0 +1,153 @@
+/* ===== NOTIF TOPBAR ===== */
+.notif-wrap { position: relative; }
+
+.notif-btn {
+    position: relative;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.notif-btn:hover { background: rgba(255,255,255,0.12); }
+
+.notif-badge {
+    position: absolute;
+    top: -3px; right: -3px;
+    background: #ef4444;
+    color: white;
+    font-size: 9px;
+    font-weight: 600;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    border: 2px solid #1e293b; /* sesuaikan warna topbar */
+    line-height: 1;
+}
+
+/* ===== PANEL ===== */
+.notif-panel {
+    display: none;
+    position: absolute;
+    top: 46px; right: 0;
+    width: 340px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 1050;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+}
+.notif-panel.show { display: block; }
+
+/* HEADER */
+.notif-panel-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.notif-panel-title { font-size: 14px; font-weight: 600; color: #0f172a; }
+.notif-panel-sub   { font-size: 11px; color: #64748b; margin-top: 1px; }
+
+.notif-count-badge {
+    font-size: 10px; font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 99px;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* LIST */
+.notif-list { padding: 8px; }
+
+.notif-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 10px 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.12s, opacity 0.2s;
+    margin-bottom: 4px;
+    border-left: 3px solid transparent;
+}
+.notif-item:last-child { margin-bottom: 0; }
+.notif-item.read { opacity: 0.45; pointer-events: none; }
+
+.notif-yellow { border-left-color: #eab308 !important; background: #fefce8; }
+.notif-yellow:hover { background: #fef9c3; }
+.notif-orange { border-left-color: #f97316 !important; background: #fff7ed; }
+.notif-orange:hover { background: #ffedd5; }
+.notif-red    { border-left-color: #ef4444 !important; background: #fef2f2; }
+.notif-red:hover    { background: #fee2e2; }
+
+/* ICON */
+.notif-icon-wrap {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+}
+.notif-icon-yellow { background: #fef08a; color: #a16207; }
+.notif-icon-orange { background: #fed7aa; color: #c2410c; }
+.notif-icon-red    { background: #fecaca; color: #b91c1c; }
+
+/* BODY */
+.notif-body { flex: 1; min-width: 0; }
+
+.notif-title { font-size: 12.5px; font-weight: 600; margin-bottom: 2px; }
+.notif-title-yellow { color: #854d0e; }
+.notif-title-orange { color: #9a3412; }
+.notif-title-red    { color: #991b1b; }
+
+.notif-desc { font-size: 11.5px; line-height: 1.5; margin-bottom: 4px; }
+.notif-desc-yellow { color: #92400e; }
+.notif-desc-orange { color: #b45309; }
+.notif-desc-red    { color: #b91c1c; }
+
+.notif-meta { font-size: 10.5px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.notif-meta-yellow { color: #ca8a04; }
+.notif-meta-orange { color: #ea580c; }
+.notif-meta-red    { color: #dc2626; }
+
+.meta-dot {
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* FOOTER */
+.notif-panel-footer {
+    padding: 10px 16px;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.notif-footer-hint { font-size: 11px; color: #94a3b8; }
+.notif-mark-all {
+    font-size: 11.5px;
+    color: #3b82f6;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 500;
+}
+.notif-mark-all:hover { text-decoration: underline; }

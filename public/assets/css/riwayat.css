@@ -1,0 +1,346 @@
+/* riwayat */
+* { box-sizing: border-box; }
+
+.history-wrapper {
+    width: 100%;
+    overflow-x: hidden;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.history-card-box {
+    width: 100%;
+    background: linear-gradient(135deg, #cfe9ff, #e6f4ff);
+    border-radius: 14px;
+    padding: 16px 12px 12px 12px;
+    box-shadow: 0 4px 12px rgba(1, 21, 63, 0.16);
+    overflow: hidden;
+}
+
+/* =====================
+   HOURLY
+   ===================== */
+.history-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.history-scroll::-webkit-scrollbar { height: 6px; }
+.history-scroll::-webkit-scrollbar-track {
+    background: linear-gradient(135deg, #cfe9ff, #e6f4ff);
+    border-radius: 10px;
+}
+.history-scroll::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.25);
+    border-radius: 10px;
+}
+.history-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.45);
+}
+.history-scroll {
+    scrollbar-color: #6283a9 #e6f4ff;
+    scrollbar-width: thin;
+}
+
+.history-item {
+    flex: 0 0 auto;
+    min-width: 65px;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.neutral-box {
+    background: #e4f2ff !important;
+    color: #334155 !important;
+    border: 1px solid #e2e8f0;
+}
+
+/* =====================
+   DAILY CARD BOX - container query support
+   ===================== */
+.daily-card-box {
+    container-type: inline-size;
+    container-name: dailybox;
+}
+
+/* =====================
+   DAILY — DESKTOP ROW
+   Default: tampil sebagai grid row
+   ===================== */
+.daily-row {
+    display: grid;
+    grid-template-columns:
+        minmax(80px, 110px)
+        minmax(70px, 90px)
+        minmax(80px, 100px)
+        minmax(80px, 100px)
+        minmax(80px, 100px)
+        minmax(60px, 80px)
+        minmax(70px, 100px)
+        1fr;
+    column-gap: 8px;
+    align-items: center;
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.daily-mobile-card {
+    display: none;
+}
+
+/* =====================
+   DAILY — MOBILE CARD
+   Aktif saat container < 720px
+   ===================== */
+@container dailybox (max-width: 719px) {
+    .daily-row {
+        display: none !important;
+    }
+
+    .daily-mobile-card {
+        display: block;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        font-size: 12px;
+    }
+
+    .mobile-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .mobile-right-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mobile-card-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        border-top: 1px solid #e5edf7;
+        padding-top: 10px;
+    }
+
+    .mobile-card-stats .col-climate {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+}
+
+/* Fallback: browser lama yang tidak support container query */
+@supports not (container-type: inline-size) {
+    @media (max-width: 900px) {
+        .daily-row { display: none !important; }
+        .daily-mobile-card {
+            display: block;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        .mobile-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .mobile-right-top { display: flex; align-items: center; gap: 8px; }
+        .mobile-card-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            border-top: 1px solid #e5edf7;
+            padding-top: 10px;
+        }
+    }
+}
+
+/* =====================
+   SHARED DAILY STYLES
+   ===================== */
+.today-row {
+    background: #eff6ff !important;
+    border: 1px solid #1e58d7;
+}
+
+.col-day {
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.col-aqi {
+    display: flex;
+    align-items: center;
+}
+
+.col-pm {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.col-pm small {
+    font-size: 10px;
+    color: #94a3b8;
+    line-height: 1;
+}
+
+.col-pm span {
+    font-weight: 500;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.col-climate {
+    white-space: nowrap;
+    color: #334155;
+}
+
+.col-status {
+    color: #334155;
+    white-space: nowrap;
+}
+
+/* AQI */
+.aqi-box {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 64px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    color: white;
+}
+
+.aqi-good     { background: #76a13c; }
+.aqi-moderate { background: #d9b11c; }
+.aqi-unhealthy{ background: #d9732e; }
+.aqi-very     { background: #c93d3d; }
+.aqi-hazard   { background: #4d1d2b; }
+
+/* =====================
+   CHART
+   ===================== */
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+@media (min-width: 768px) {
+    .chart-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.chart-box {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chart-toggle {
+    display: flex;
+    gap: 5px;
+}
+
+.chart-toggle button {
+    border: none;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #e5e7eb;
+    cursor: pointer;
+}
+
+.chart-toggle button.active {
+    background: #2563eb;
+    color: white;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 240px;
+}
+
+.chart-container canvas {
+    position: absolute !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.chart-highlight {
+    background: #eef2f7;
+    padding: 6px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.hourly-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#hourlyFilter {
+    border: none;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.chart-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.chart-filter-bar h4 { margin: 0; }
+.chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.chart-metric-select {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    cursor: pointer;
+    background: #fff;
+}
