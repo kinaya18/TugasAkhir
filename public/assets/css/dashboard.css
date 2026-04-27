@@ -35,203 +35,166 @@
 }
 
 /* ===================================================
-   SECTION 1: DASHBOARD
+   SECTION 1: DASHBOARD — NEW TWO-COLUMN LAYOUT
    =================================================== */
 
 .dashboard-wrapper {
-    padding: 16px 12px 12px 12px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 14px;
+    padding: 16px 12px 12px;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     margin-top: -14px;
 }
 
-/* ===== MAIN CARD ===== */
-.main-card {
-    background: linear-gradient(135deg, #cfe9ff, #e6f4ff);
-    border-radius: 28px;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-/* ===== HERO ===== */
-.hero-card {
+/* ---- LEFT COLUMN ---- */
+.dash-left {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.hero-left  { flex: 1 1 180px; min-width: 0; }
-.hero-right { flex: 0 0 auto; text-align: center; min-width: 120px; }
-
-.hero-top {
-    display: flex;
+    flex-direction: column;
     gap: 12px;
-    color: #475569;
-    font-size: 13px;
-    margin-bottom: 6px;
 }
 
-.hero-temp {
-    font-size: clamp(32px, 6vw, 52px);
-    font-weight: bold;
-    color: #0f172a;
-    margin: 0 0 4px 0;
-    line-height: 1.1;
-}
-
-.hero-desc  { color: #64748b; margin: 4px 0 10px; font-size: 14px; }
-
-.hero-bottom {
+/* ---- HERO CARD ---- */
+.hero-card {
+    background: #fffde7;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
     display: flex;
-    gap: 14px;
-    color: #272f39;
-    font-size: 14px;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.hero-label { font-size: 11px; color: #475569; margin: 0 0 4px 0; letter-spacing: 0.04em; }
-.hero-value { font-size: clamp(18px, 3vw, 26px); font-weight: bold; margin: 0 0 8px 0; color: #0f172a; }
+.hero-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-time-label {
+    font-size: 12px;
+    color: #94a3b8;
+}
 
 .hero-status {
     background: #f59e0b;
-    color: white;
-    padding: 5px 14px;
+    color: #fff;
+    padding: 4px 14px;
     border-radius: 20px;
     font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     display: inline-block;
 }
 
-/* ===== GAUGE ROW ===== */
-.gauge-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-
-.gauge-card {
-    background: rgba(255,255,255,0.65);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 16px 12px;
-    text-align: center;
+.hero-aqi-block {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    align-items: flex-end;
+    gap: 10px;
 }
 
-.gauge-card:hover  { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
-.gauge-card:active { transform: scale(0.97); }
-
-.gauge-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 8px;
+.hero-temp {
+    font-size: 64px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1;
 }
 
-.gauge-wrapper canvas { width: 100% !important; height: 100% !important; }
-
-.gauge-center {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1.2;
-    pointer-events: none;
+.hero-aqi-info {
+    padding-bottom: 4px;
 }
 
-.gauge-value { font-weight: bold; font-size: 16px; color: #0f172a; white-space: nowrap; }
-.gauge-unit  { font-size: 10px; color: #64748b; }
-
-.gauge-label {
-    font-size: 12px;
-    margin: 4px 0 8px;
+.hero-desc {
+    font-size: 13px;
     color: #334155;
-    line-height: 1.3;
-    min-height: 2.6em;
+    font-weight: 500;
+    margin: 0 0 4px;
+}
+
+.hero-pm25 {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+}
+
+.hero-climate-row {
+    display: flex;
+    gap: 14px;
+}
+
+.hero-climate-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-/* ===== BADGE ===== */
-.badge {
-    font-size: 11px;
-    padding: 4px 12px;
+    gap: 6px;
+    background: rgba(0,0,0,0.05);
+    padding: 6px 12px;
     border-radius: 20px;
+    font-size: 13px;
+    color: #334155;
     font-weight: 500;
-    white-space: nowrap;
 }
 
-
-
-/* ===== HEALTH CARD ===== */
-.health-card {
-    margin-top: 16px;
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+.hero-climate-item i {
+    font-size: 13px;
 }
 
-.health-header {
+/* HERO SCALE BAR */
+.hero-scale-wrap {
+    margin-top: 4px;
+}
+
+.hero-scale-bar {
+    position: relative;
+    display: flex;
+    height: 10px;
+    border-radius: 10px;
+    overflow: visible;
+    margin-bottom: 4px;
+}
+
+.hs-seg { flex: 1; height: 100%; }
+.hs-seg:first-child { border-radius: 10px 0 0 10px; }
+.hs-seg:last-child  { border-radius: 0 10px 10px 0; }
+.hs-good     { background: #22c55e; }
+.hs-moderate { background: #a3e635; }
+.hs-sensitive{ background: #facc15; }
+.hs-unhealthy{ background: #f97316; }
+.hs-very     { background: #ef4444; }
+.hs-hazard   { background: #7f1d1d; }
+
+.hero-scale-needle {
+    position: absolute;
+    top: -4px;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: left 0.5s ease;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.hero-scale-nums {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-    gap: 10px;
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 6px;
 }
 
-.health-header h3 { margin: 0; font-size: 17px; color: #0f172a; font-weight: 600; }
-
-.health-badge {
-    background: #f59e0b;
-    color: #ffffff;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-}
-
-.health-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.health-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8fafc;
-    padding: 12px;
-    border-radius: 12px;
-    font-size: 14px;
-    color: #334155;
-    line-height: 1.4;
-}
-
-.health-item i { color: #3b82f6; flex-shrink: 0; font-size: 16px; }
-
-/* ===== ASTHMA RISK CARD ===== */
+/* ---- ASTHMA RISK CARD ---- */
 .asthma-risk-card {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     border-radius: 14px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    padding: 16px 20px;
-    margin-bottom: 14px;
+    padding: 14px 16px;
     position: relative;
     overflow: hidden;
     border: 1px solid transparent;
@@ -249,21 +212,149 @@
 }
 
 .asthma-risk-icon-wrap {
-    width: 44px; height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     margin-left: 8px;
-    font-size: 18px;
+    font-size: 17px;
     transition: background 0.4s;
 }
 
-.asthma-risk-content { flex: 1; }
+.asthma-risk-content { flex: 1; min-width: 0; }
 
-.asthma-risk-title { font-weight: 700; font-size: 14px; margin: 0 0 3px 0; transition: color 0.4s; }
-.asthma-risk-desc  { font-size: 13px; color: #64748b; margin: 0; line-height: 1.5; }
+.asthma-risk-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin: 0 0 2px;
+    transition: color 0.4s;
+}
+
+.asthma-risk-desc {
+    display: none;
+}
+
+.asthma-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #fff;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* ---- RIGHT COLUMN ---- */
+.dash-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ---- HEALTH CARD ---- */
+.health-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.health-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.health-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.health-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.4;
+}
+
+.health-item i { color: #22c55e; flex-shrink: 0; font-size: 15px; }
+
+/* ---- GAUGE ROW ---- */
+.gauge-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.gauge-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px 10px 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gauge-card:hover  { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.gauge-card:active { transform: scale(0.97); }
+
+.gauge-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 8px;
+}
+
+.gauge-wrapper canvas { width: 100% !important; height: 100% !important; }
+
+.gauge-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.gauge-value { font-weight: 700; font-size: 15px; color: #0f172a; white-space: nowrap; }
+.gauge-unit  { font-size: 9px; color: #64748b; }
+
+.gauge-label {
+    font-size: 12px;
+    margin: 0;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* ===== BADGE ===== */
+.badge {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+}
 
 /* ===== GAUGE POPUP ===== */
 .popup-overlay {
@@ -437,10 +528,10 @@
 
 .avg-label { font-size: 11px; color: #64748b; }
 
-.avg-val                { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1; }
-.avg-green  .avg-val    { color: #166534; }
-.avg-yellow .avg-val    { color: #854d0e; }
-.avg-pink   .avg-val    { color: #991b1b; }
+.avg-val             { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1; }
+.avg-green  .avg-val { color: #166534; }
+.avg-yellow .avg-val { color: #854d0e; }
+.avg-pink   .avg-val { color: #991b1b; }
 
 /* ===================================================
    SECTION 2: HISTORY / RIWAYAT
@@ -458,7 +549,8 @@
 
 .history-card-box {
     width: 100%;
-    background: linear-gradient(135deg, #cfe9ff, #e6f4ff);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 14px;
     padding: 16px 12px 12px 12px;
     box-shadow: 0 4px 12px rgba(1, 21, 63, 0.16);
@@ -684,8 +776,8 @@
 }
 
 .aqi-card {
-    background: linear-gradient(135deg, #cfe9ff, #e6f4ff);
-    border: 1px solid rgba(0,0,0,0.08);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 14px;
     padding: 18px;
     display: flex;
@@ -723,12 +815,12 @@
 .hazardous      { background: #7f1d1d; }
 
 /* AQI badge colors */
-.badge-good { background:#dcfce7; color:#166534; }
-.badge-moderate { background:#fef9c3; color:#854d0e; }
-.badge-unhealthy { background:#fee2e2; color:#991b1b; }
-.badge-sensitive { background:#ffedd5; color:#c2410c; }
-.badge-very-unhealthy { background:#f3e8ff; color:#7e22ce; }
-.badge-hazardous { background:#fee2e2; color:#7f1d1d; }
+.badge-good          { background: #dcfce7; color: #166534; }
+.badge-moderate      { background: #fef9c3; color: #854d0e; }
+.badge-unhealthy     { background: #fee2e2; color: #991b1b; }
+.badge-sensitive     { background: #ffedd5; color: #c2410c; }
+.badge-very-unhealthy{ background: #f3e8ff; color: #7e22ce; }
+.badge-hazardous     { background: #fee2e2; color: #7f1d1d; }
 
 /* AQI Info Overlay */
 .aqi-overlay {
@@ -818,9 +910,9 @@
 /* DO & DON'T */
 .dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-.dd-box { border-radius: 10px; padding: 12px 14px; }
-.dd-do  { background: #f0fdf4; }
-.dd-dont{ background: #fef2f2; }
+.dd-box  { border-radius: 10px; padding: 12px 14px; }
+.dd-do   { background: #f0fdf4; }
+.dd-dont { background: #fef2f2; }
 
 .dd-title {
     font-size: 11px;
@@ -855,66 +947,250 @@
    RESPONSIVE
    =================================================== */
 
-/* Large desktop */
-@media (min-width: 1200px) {
-    .dashboard-wrapper { padding: 28px; }
-    .gauge-wrapper { width: 120px; height: 120px; }
-    .gauge-value { font-size: 18px; }
-    .gauge-unit  { font-size: 11px; }
-    .gauge-label { font-size: 13px; }
-}
+/* Tablet — stack columns */
+@media (max-width: 1024px) {
+    .dashboard-wrapper {
+        grid-template-columns: 1fr;
+    }
 
-/* Tablet landscape */
-@media (min-width: 993px) and (max-width: 1199px) {
-    .gauge-wrapper { width: 90px; height: 90px; }
-    .gauge-value   { font-size: 14px; }
-    .gauge-label   { font-size: 11px; }
-}
+    .dash-left {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 
-/* Tablet portrait */
-@media (max-width: 992px) {
-    .gauge-row   { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .gauge-wrapper { width: 100px; height: 100px; }
-    .health-list { grid-template-columns: repeat(2, 1fr); }
+    .hero-card {
+        flex: 1 1 280px;
+        min-width: 260px;
+    }
+
+    .asthma-risk-card {
+        flex: 1 1 260px;
+        min-width: 240px;
+    }
+
+    .gauge-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* Small tablet */
 @media (max-width: 767px) {
     .dashboard-wrapper { padding: 12px; }
-    .main-card { padding: 16px; border-radius: 22px; }
-    .gauge-row { grid-template-columns: repeat(2, 1fr); }
-    .gauge-wrapper { width: 88px; height: 88px; }
-    .health-card { padding: 16px; border-radius: 20px; }
-    .health-list { grid-template-columns: 1fr; }
+    .dash-left { flex-direction: column; }
+    .hero-card { border-radius: 18px; }
+    .health-list { grid-template-columns: repeat(2, 1fr); }
+    .gauge-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .gauge-wrapper { width: 80px; height: 80px; }
 }
 
 /* Mobile */
 @media (max-width: 575px) {
-    .dashboard-wrapper { padding: 10px; }
-    .main-card { padding: 14px; border-radius: 20px; }
-    .hero-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .hero-right { width: 100%; text-align: left; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .hero-label { display: none; }
-    .hero-bottom { gap: 10px; font-size: 13px; }
-    .gauge-row  { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .dashboard-wrapper { padding: 10px; gap: 10px; }
+    .hero-temp { font-size: 52px; }
+    .health-list { grid-template-columns: 1fr; gap: 8px; }
+    .health-item { font-size: 13px; }
+    .gauge-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .gauge-card { padding: 12px 8px; border-radius: 14px; }
-    .gauge-wrapper { width: 80px; height: 80px; }
+    .gauge-wrapper { width: 75px; height: 75px; }
     .gauge-value { font-size: 13px; }
     .gauge-unit  { font-size: 9px; }
-    .gauge-label { font-size: 11px; min-height: unset; }
-    .badge { font-size: 10px; padding: 3px 10px; }
-    .health-card { padding: 14px; border-radius: 18px; margin-top: 12px; }
-    .health-header h3 { font-size: 15px; }
-    .health-item { font-size: 13px; padding: 10px; gap: 8px; }
-    .health-list { grid-template-columns: 1fr; gap: 8px; }
-    .popup-box { padding: 20px 16px 18px; }
+    .gauge-label { font-size: 11px; }
+    .popup-box  { padding: 20px 16px 18px; }
     .popup-big-value { font-size: 36px; }
     .aqi-info-wrapper { padding: 12px 10px 20px; }
 }
 
 /* Very small mobile */
 @media (max-width: 360px) {
-    .gauge-row { grid-template-columns: 1fr 1fr; gap: 6px; }
-    .gauge-wrapper { width: 70px; height: 70px; }
+    .gauge-row { gap: 6px; }
+    .gauge-wrapper { width: 68px; height: 68px; }
     .gauge-value { font-size: 12px; }
+}
+
+/* ===== TIMELINE SCROLLABLE PER JAM ===== */
+.fc-scroll {
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.fc-scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.fc-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.fc-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.fc-timeline {
+    display: flex;
+    gap: 6px;
+    min-width: max-content;
+    padding: 2px 2px 4px;
+}
+
+.fc-hour {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 0.5px solid #e2e8f0;
+    background: #ffffff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    min-width: 58px;
+    user-select: none;
+}
+
+.fc-hour:hover {
+    border-color: #94a3b8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.fc-hour.active {
+    border-width: 1.5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.fc-h-time {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.fc-h-bar-wrap {
+    width: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 52px;
+}
+
+.fc-h-bar {
+    width: 18px;
+    border-radius: 4px;
+    transition: height 0.3s ease;
+}
+
+.fc-h-val {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.fc-h-label {
+    font-size: 9px;
+    color: #94a3b8;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Highlight jam sekarang */
+.fc-hour.is-now .fc-h-time::after {
+    content: ' ●';
+    font-size: 7px;
+    vertical-align: middle;
+    color: inherit;
+}
+
+/* ===== TIMELINE CARD ===== */
+.timeline-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 12px rgba(1, 21, 63, 0.16);
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.timeline-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.timeline-card-title {
+    margin: 0 0 3px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.timeline-card-sub {
+    margin: 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.timeline-now-badge {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    align-self: center;
+}
+
+.timeline-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,0.07);
+}
+
+.tl-leg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.tl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.timeline-card,
+.history-card-box,
+.aqi-card {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.mini-chart-card {
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+
+    padding: 14px 14px 12px;
+    margin-top: 10px;
+
+    max-width: 700px;   /* 🔥 bikin tidak full panjang */
+}
+
+/* biar center kayak contoh */
+.mini-chart-card {
+    margin-left: auto;
+    margin-right: auto;
 }
