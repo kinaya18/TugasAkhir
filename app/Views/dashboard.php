@@ -150,44 +150,55 @@
     </div>
 </div>
 
-    <!-- DAILY TABLE -->
-    <div class="history-card-box daily-card-box">
-        <h3>Riwayat Harian</h3>
+<!-- DAILY TABLE -->
+<div class="history-card-box daily-card-box">
+    <h3>Riwayat Harian</h3>
 
-        <?php foreach ($historyDaily as $item): ?>
-            <!-- DESKTOP ROW -->
-            <div class="daily-row <?= $item['is_today'] ? 'today-row' : '' ?>">
-                <div class="col-day"><?= $item['date'] ?></div>
-                <div class="col-aqi">
-                    <div class="aqi-box <?= getAqiClass($item['aqi']) ?>"><?= $item['aqi'] ?></div>
-                </div>
-                <div class="col-pm"><small>PM2.5</small><span><?= $item['pm25'] ?> µg/m³</span></div>
-                <div class="col-pm"><small>PM10</small><span><?= $item['pm10'] ?> µg/m³</span></div>
-                <div class="col-pm"><small>NOX/VOC</small><span><?= $item['nox'] ?> ppm</span></div>
-                <div class="col-climate"><i class="fa-solid fa-temperature-half"></i> <?= $item['temp'] ?>°</div>
-                <div class="col-climate"><i class="fa-solid fa-droplet"></i> <?= $item['humidity'] ?>%</div>
-                <div class="col-status"><?= getAqiLabel($item['aqi']) ?></div>
-            </div>
-
-            <!-- MOBILE CARD -->
-            <div class="daily-mobile-card <?= $item['is_today'] ? 'today-row' : '' ?>">
-                <div class="mobile-card-top">
-                    <div class="col-day"><?= $item['date'] ?></div>
-                    <div class="mobile-right-top">
-                        <div class="aqi-box <?= getAqiClass($item['aqi']) ?>"><?= $item['aqi'] ?></div>
-                        <div class="col-status"><?= getAqiLabel($item['aqi']) ?></div>
-                    </div>
-                </div>
-                <div class="mobile-card-stats">
-                    <div class="col-pm"><small>PM2.5</small><span><?= $item['pm25'] ?> µg/m³</span></div>
-                    <div class="col-pm"><small>PM10</small><span><?= $item['pm10'] ?> µg/m³</span></div>
-                    <div class="col-pm"><small>NOX/VOC</small><span><?= $item['nox'] ?> ppm</span></div>
-                    <div class="col-climate"><i class="fa-solid fa-temperature-half"></i> <?= $item['temp'] ?>°</div>
-                    <div class="col-climate"><i class="fa-solid fa-droplet"></i> <?= $item['humidity'] ?>%</div>
-                </div>
-            </div>
-        <?php endforeach; ?>
+    <div class="daily-tbl-wrap">
+        <table class="daily-tbl">
+            <colgroup>
+                <col style="width:18%">
+                <col style="width:10%">
+                <col style="width:13%">
+                <col style="width:11%">
+                <col style="width:13%">
+                <col style="width:13%">
+                <col style="width:11%">
+                <col style="width:11%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Lokasi</th>
+                    <th>Status</th>
+                    <th>AQI </th>
+                    <th>PM<sub>2.5</sub> (µg/m³)</th>
+                    <th>PM<sub>10</sub> (µg/m³)</th>
+                    <th>Temp. (°C)</th>
+                    <th>Humi. (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($historyDaily as $item): ?>
+                <tr class="<?= $item['is_today'] ? 'today-row' : '' ?>">
+                    <td class="col-day"><?= $item['date'] ?></td>
+                    <td class="col-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
+                    <td>
+                        <span class="daily-status-pill <?= getDailyPillClass($item['aqi']) ?>">
+                            <?= getAqiLabel($item['aqi']) ?>
+                        </span>
+                    </td>
+                    <td class="num-cell"><?= $item['aqi'] ?></td>
+                    <td class="num-cell"><?= $item['pm25'] ?> </td>
+                    <td class="num-cell"><?= $item['pm10'] ?></td>
+                    <td class="num-cell"><?= $item['temp'] ?>°</td>
+                    <td class="num-cell"><?= $item['humidity'] ?>%</td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
+</div>
 
     <!-- UNIFIED CHART CARD -->
     <div class="history-card-box">
@@ -236,7 +247,7 @@
 </div>
 
 <!-- ===================== SECTION 3: INFORMASI AQI ===================== -->
-
+<div class="mb-3"></div>
     <div class="aqi-header">
         <h2>Panduan Indikator AQI Indoor</h2>
         <p>Standar penilaian kualitas udara dalam ruangan. Klik untuk melihat detail & panduan.</p>
