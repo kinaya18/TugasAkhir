@@ -13,7 +13,11 @@
         <div class="hero-card">
             <div class="hero-badge-row">
                 <span class="hero-status" id="hero-status-badge">--</span>
-                <span class="hero-time-label">just now</span>
+                <div class="hero-badge-right">
+                    <i class="fa-solid fa-location-dot hero-loc-icon"></i>
+                    <span class="hero-loc-text" id="hero-location">Ruang Utama</span>
+                    <span class="hero-time-label">· just now</span>
+                </div>
             </div>
 
             <div class="hero-aqi-block">
@@ -152,47 +156,41 @@
 
 <!-- DAILY TABLE -->
 <div class="history-card-box daily-card-box">
-    <h3>Riwayat Harian</h3>
+    <div class="daily-card-header">
+        <h4>Riwayat Harian</h4>
+    </div>
 
     <div class="daily-tbl-wrap">
         <table class="daily-tbl">
-            <colgroup>
-                <col style="width:18%">
-                <col style="width:10%">
-                <col style="width:13%">
-                <col style="width:11%">
-                <col style="width:13%">
-                <col style="width:13%">
-                <col style="width:11%">
-                <col style="width:11%">
-            </colgroup>
             <thead>
                 <tr>
                     <th>Tanggal</th>
-                    <th>Lokasi</th>
                     <th>Status</th>
                     <th>AQI </th>
                     <th>PM<sub>2.5</sub> (µg/m³)</th>
                     <th>PM<sub>10</sub> (µg/m³)</th>
+                    <th>NOx/VOC (ppm)</th>
                     <th>Temp. (°C)</th>
                     <th>Humi. (%)</th>
+                    <th>Lokasi</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($historyDaily as $item): ?>
                 <tr class="<?= $item['is_today'] ? 'today-row' : '' ?>">
                     <td class="col-day"><?= $item['date'] ?></td>
-                    <td class="col-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
                     <td>
                         <span class="daily-status-pill <?= getDailyPillClass($item['aqi']) ?>">
                             <?= getAqiLabel($item['aqi']) ?>
                         </span>
                     </td>
                     <td class="num-cell"><?= $item['aqi'] ?></td>
-                    <td class="num-cell"><?= $item['pm25'] ?> </td>
+                    <td class="num-cell"><?= $item['pm25'] ?></td>
                     <td class="num-cell"><?= $item['pm10'] ?></td>
+                    <td class="num-cell"><?= $item['nox'] ?></td>
                     <td class="num-cell"><?= $item['temp'] ?>°</td>
                     <td class="num-cell"><?= $item['humidity'] ?>%</td>
+                    <td class="col-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -201,9 +199,13 @@
 </div>
 
     <!-- UNIFIED CHART CARD -->
-    <div class="history-card-box">
-        <h3>Riwayat</h3>
-        <p class="rwh-sub">Grafik riwayat kualitas udara</p>
+    <div class="history-card-box daily-card-box">
+    <div class="daily-card-header">
+        <h4>Grafik Riwayat</h4>
+        <button class="export-btn" onclick="exportToExcel()">
+            <i class="fa-solid fa-file-excel"></i> Export Excel
+        </button>
+    </div>
     
         <div class="rwh-header">
         </div>
@@ -440,6 +442,7 @@
 
 <!-- ===================== SCRIPTS ===================== -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
 // ============================================================
@@ -447,7 +450,7 @@
 // ============================================================
 const hourlyRaw  = <?= json_encode($historyHourly) ?>;
 const dailyRaw   = <?= json_encode($historyDaily) ?>;
-const latestData = <?= json_encode($latestUdara) ?>;
+const latestData = <?= json_encode(array_merge($latestUdara ?? [], ['location' => 'Bojongsoang'])) ?>;
 const monthlyRaw = <?= isset($historyMonthly) ? json_encode($historyMonthly) : '[]' ?>;
 
 // ============================================================
@@ -534,6 +537,7 @@ function renderDashboard() {
     document.getElementById('hero-temp').textContent        = suhu;
     document.getElementById('hero-humidity').textContent    = kelembaban;
     document.getElementById('hero-pm25-value').textContent  = pm25 + ' µg/m³ PM2.5';
+    document.getElementById('hero-location').textContent = d.location ?? 'Ruang Utama';
 
     const heroBadge = document.getElementById('hero-status-badge');
     heroBadge.textContent      = aqiLabel.toUpperCase();
@@ -1039,6 +1043,89 @@ function generateDummyForecast() {
 
 // Init
 renderTimeline();
+
+// ============================================================
+// EXPORT TO EXCEL
+// ============================================================
+function exportToExcel() {
+    const dayNames = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+    // Gabungkan hourly + daily, prioritaskan hourly untuk detail
+    const source = hourlyRaw.length > 0 ? hourlyRaw : dailyRaw;
+
+    const rows = source.map(item => {
+        // Parse tanggal & jam
+        const rawDate = item.created_at || item.date || item.tanggal || '';
+        let hariTanggal = '';
+        let jam = item.time || item.jam || '';
+
+        if (rawDate) {
+            const d = new Date(rawDate);
+            if (!isNaN(d)) {
+                hariTanggal = dayNames[d.getDay()] + ', ' +
+                    String(d.getDate()).padStart(2,'0') + '/' +
+                    String(d.getMonth()+1).padStart(2,'0') + '/' +
+                    d.getFullYear();
+                if (!jam) {
+                    jam = String(d.getHours()).padStart(2,'0') + ':' +
+                          String(d.getMinutes()).padStart(2,'0');
+                }
+            } else {
+                hariTanggal = rawDate;
+            }
+        }
+
+        const aqi = parseFloat(item.aqi) || 0;
+
+        return {
+            'Bulan'          : item.bulan || (rawDate ? new Date(rawDate).toLocaleString('id-ID', { month: 'long', year: 'numeric' }) : ''),
+            'Hari & Tanggal' : hariTanggal,
+            'Jam'            : jam,
+            'Status'         : getAqiLabel(aqi),
+            'AQI '           : aqi,
+            'PM2.5 (µg/m³)'  : parseFloat(item.pm25) || 0,
+            'PM10 (µg/m³)'   : parseFloat(item.pm10) || 0,
+            'NOx/VOC (ppm)'  : parseFloat(item.nox ?? item.gas) || 0,
+            'Temp. (°C)'     : parseFloat(item.suhu ?? item.temp) || 0,
+            'Humi. (%)'      : parseFloat(item.kelembaban ?? item.humidity) || 0,
+            'Lokasi'         : item.location || latestData?.location || 'Ruang Utama',
+        };
+    });
+
+    if (rows.length === 0) {
+        alert('Tidak ada data untuk diekspor.');
+        return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+
+    // Lebar kolom
+    ws['!cols'] = [
+        { wch: 16 }, // Bulan
+        { wch: 22 }, // Hari & Tanggal
+        { wch: 8  }, // Jam
+        { wch: 18 }, // Status
+        { wch: 10 }, // AQI
+        { wch: 14 }, // PM2.5
+        { wch: 14 }, // PM10
+        { wch: 14 }, // NOx/VOC
+        { wch: 12 }, // Temp
+        { wch: 10 }, // Humi
+        { wch: 16 }, // Lokasi
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Riwayat Harian');
+
+    // Nama file pakai tanggal hari ini
+    const today = new Date();
+    const fileName = 'riwayat-udara-' +
+        String(today.getDate()).padStart(2,'0') + '-' +
+        String(today.getMonth()+1).padStart(2,'0') + '-' +
+        today.getFullYear() + '.xlsx';
+
+    XLSX.writeFile(wb, fileName);
+}
 </script>
 
 <?= $this->endSection() ?>
