@@ -1,0 +1,321 @@
+/* =====================================================
+   section_hero.css
+   Dashboard section 1: hero card, asthma risk,
+   health card, gauge row
+   ===================================================== */
+
+/* ===== WRAPPER ===== */
+.dashboard-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 14px;
+    padding: 16px 12px 12px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    margin-top: -14px;
+}
+
+/* ===== LEFT COLUMN ===== */
+.dash-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== HERO CARD ===== */
+.hero-card {
+    background: #fffde7;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hero-badge-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hero-badge-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero-loc-icon {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.hero-loc-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.hero-time-label {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.hero-status {
+    background: #f59e0b;
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    display: inline-block;
+}
+
+.hero-aqi-block {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.hero-temp {
+    font-size: 64px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1;
+}
+
+.hero-aqi-info { padding-bottom: 4px; }
+
+.hero-desc {
+    font-size: 13px;
+    color: #334155;
+    font-weight: 500;
+    margin: 0 0 4px;
+}
+
+.hero-pm25 {
+    font-size: 12px;
+    color: #64748b;
+    margin: 0;
+}
+
+.hero-climate-row {
+    display: flex;
+    gap: 14px;
+}
+
+.hero-climate-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.05);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 500;
+}
+
+.hero-climate-item i { font-size: 13px; }
+
+/* Hero scale bar */
+.hero-scale-wrap { margin-top: 4px; }
+
+.hero-scale-bar {
+    position: relative;
+    display: flex;
+    height: 10px;
+    border-radius: 10px;
+    overflow: visible;
+    margin-bottom: 4px;
+}
+
+.hs-seg             { flex: 1; height: 100%; }
+.hs-seg:first-child { border-radius: 10px 0 0 10px; }
+.hs-seg:last-child  { border-radius: 0 10px 10px 0; }
+.hs-good      { background: #22c55e; }
+.hs-moderate  { background: #a3e635; }
+.hs-sensitive { background: #facc15; }
+.hs-unhealthy { background: #f97316; }
+.hs-very      { background: #ef4444; }
+.hs-hazard    { background: #7f1d1d; }
+
+.hero-scale-needle {
+    position: absolute;
+    top: -4px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: left 0.5s ease;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.hero-scale-nums {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #94a3b8;
+    margin-top: 6px;
+}
+
+/* ===== ASTHMA RISK CARD ===== */
+.asthma-risk-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: box-shadow 0.2s, background 0.4s, border-color 0.4s;
+}
+
+.asthma-risk-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.11); }
+
+.asthma-risk-indicator {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    border-radius: 14px 0 0 14px;
+    transition: background 0.4s;
+}
+
+.asthma-risk-icon-wrap {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+    font-size: 17px;
+    transition: background 0.4s;
+}
+
+.asthma-risk-content { flex: 1; min-width: 0; }
+
+.asthma-risk-title {
+    font-weight: 700;
+    font-size: 13px;
+    margin: 0 0 2px;
+    transition: color 0.4s;
+}
+
+.asthma-risk-desc { display: none; }
+
+.asthma-badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #fff;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+/* ===== RIGHT COLUMN ===== */
+.dash-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===== HEALTH CARD ===== */
+.health-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.health-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.health-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.health-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.health-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.4;
+}
+
+.health-item i { color: #22c55e; flex-shrink: 0; font-size: 15px; }
+
+/* ===== GAUGE ROW ===== */
+.gauge-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.gauge-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px 10px 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.gauge-card:hover  { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.gauge-card:active { transform: scale(0.97); }
+
+.gauge-wrapper {
+    position: relative;
+    width: 90px; height: 90px;
+    margin: 0 auto 8px;
+}
+
+.gauge-wrapper canvas { width: 100% !important; height: 100% !important; }
+
+.gauge-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.gauge-value { font-weight: 700; font-size: 15px; color: #0f172a; white-space: nowrap; }
+.gauge-unit  { font-size: 9px; color: #64748b; }
+
+.gauge-label {
+    font-size: 12px;
+    margin: 0;
+    color: #475569;
+    font-weight: 500;
+}

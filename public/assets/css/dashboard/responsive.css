@@ -1,0 +1,130 @@
+/* =====================================================
+   responsive.css
+   Semua media queries & container queries
+   ===================================================== */
+
+/* ===== CONTAINER QUERY — daily table mobile ===== */
+@container dailybox (max-width: 719px) {
+    .daily-row { display: none !important; }
+
+    .daily-mobile-card {
+        display: block;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        font-size: 12px;
+    }
+
+    .mobile-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .mobile-right-top { display: flex; align-items: center; gap: 8px; }
+
+    .mobile-card-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        border-top: 1px solid #e5edf7;
+        padding-top: 10px;
+    }
+
+    .mobile-card-stats .col-climate { display: flex; align-items: center; gap: 4px; }
+}
+
+/* Fallback untuk browser yang tidak support container queries */
+@supports not (container-type: inline-size) {
+    @media (max-width: 900px) {
+        .daily-row { display: none !important; }
+
+        .daily-mobile-card {
+            display: block;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .mobile-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .mobile-right-top { display: flex; align-items: center; gap: 8px; }
+
+        .mobile-card-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 16px;
+            border-top: 1px solid #e5edf7;
+            padding-top: 10px;
+        }
+    }
+}
+
+/* ===== TABLET — stack columns ===== */
+@media (max-width: 1024px) {
+    .dashboard-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-left {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .hero-card {
+        flex: 1 1 280px;
+        min-width: 260px;
+    }
+
+    .asthma-risk-card {
+        flex: 1 1 260px;
+        min-width: 240px;
+    }
+
+    .gauge-row {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ===== SMALL TABLET ===== */
+@media (max-width: 767px) {
+    .dashboard-wrapper  { padding: 12px; }
+    .dash-left          { flex-direction: column; }
+    .hero-card          { border-radius: 18px; }
+    .health-list        { grid-template-columns: repeat(2, 1fr); }
+    .gauge-row          { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .gauge-wrapper      { width: 80px; height: 80px; }
+    .popup-box          { padding: 20px 16px 18px; }
+    .popup-big-value    { font-size: 36px; }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 575px) {
+    .dashboard-wrapper  { padding: 10px; gap: 10px; }
+    .hero-temp          { font-size: 52px; }
+    .health-list        { grid-template-columns: 1fr; gap: 8px; }
+    .health-item        { font-size: 13px; }
+    .gauge-row          { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .gauge-card         { padding: 12px 8px; border-radius: 14px; }
+    .gauge-wrapper      { width: 75px; height: 75px; }
+    .gauge-value        { font-size: 13px; }
+    .gauge-unit         { font-size: 9px; }
+    .gauge-label        { font-size: 11px; }
+    .aqi-info-wrapper   { padding: 12px 10px 20px; }
+}
+
+/* ===== VERY SMALL MOBILE ===== */
+@media (max-width: 360px) {
+    .gauge-row      { gap: 6px; }
+    .gauge-wrapper  { width: 68px; height: 68px; }
+    .gauge-value    { font-size: 12px; }
+}

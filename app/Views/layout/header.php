@@ -38,9 +38,6 @@
 
     <!-- LEFT -->
     <div class="topbar-left d-flex align-items-center">
-        <button class="sidebar-toggle me-3">
-            <i class="fas fa-bars text-white"></i>
-        </button>
         <div class="logo d-flex align-items-center">
             <a href="<?= base_url('dashboard') ?>" class="d-flex align-items-center text-decoration-none">
                 <img src="<?= base_url('assets/images/logo/kualitas-udara.png') ?>" class="logo-img" />
