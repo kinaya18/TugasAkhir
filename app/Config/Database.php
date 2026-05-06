@@ -27,9 +27,9 @@ class Database extends Config
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => '',
-        'password'     => '',
-        'database'     => '',
+        'username'     => 'meh',
+        'password'     => '123',
+        'database'     => 'asma_db',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,
@@ -164,7 +164,7 @@ class Database extends Config
      */
     public array $tests = [
         'DSN'         => '',
-        'hostname'    => '127.0.0.1',
+        'hostname'    => '0.0.0.0',
         'username'    => '',
         'password'    => '',
         'database'    => ':memory:',
