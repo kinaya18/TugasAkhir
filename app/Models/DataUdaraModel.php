@@ -8,5 +8,5 @@ class DataUdaraModel extends Model
 {
     protected $table = 'data_udara';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['pm25', 'pm10', 'suhu', 'kelembaban', 'created_at'];
+    protected $allowedFields = ['suhu', 'kelembaban', 'pm1_0', 'pm2_5', 'pm10', 'polutan','latitude', 'longitude', 'altitude','satellites'];
 }
