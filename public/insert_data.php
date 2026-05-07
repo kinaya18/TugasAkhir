@@ -145,6 +145,7 @@ $pm1_0 = isset($receivedData['pm1_0']) ? intval($receivedData['pm1_0']) : 0;
 $pm2_5 = isset($receivedData['pm2_5']) ? intval($receivedData['pm2_5']) : 0;
 $pm10 = isset($receivedData['pm10']) ? intval($receivedData['pm10']) : 0;
 $pollutant = isset($receivedData['pollutant']) ? floatval($receivedData['pollutant']) : 0;
+$ozone = isset($receivedData['ozone']) ? floatval($receivedData['ozone']) : 0;
 
 // Tambahkan IP address pengirim untuk logging
 $senderIP = $_SERVER['REMOTE_ADDR'];
@@ -234,9 +235,9 @@ try {
     // SQL query untuk insert data
     // Gunakan prepared statement untuk keamanan (mencegah SQL injection)
     $sql = "INSERT INTO data_udara 
-            (temperature, humidity, pm1_0, pm2_5, pm10, pollutant, timestamp) 
+            (temperature, humidity, pm1_0, pm2_5, pm10, pollutant, ozone, timestamp) 
             VALUES 
-            (:temperature, :humidity, :pm1_0, :pm2_5, :pm10, :pollutant, NOW())";
+            (:temperature, :humidity, :pm1_0, :pm2_5, :pm10, :pollutant, :ozone, NOW())";
     
     // Persiapkan statement
     $stmt = $pdo->prepare($sql);
@@ -248,7 +249,8 @@ try {
         ':pm1_0' => $pm1_0,
         ':pm2_5' => $pm2_5,
         ':pm10' => $pm10,
-        ':pollutant' => $pollutant
+        ':pollutant' => $pollutant,
+        'ozone' => $ozone
     ]);
     
     // Ambil ID yang baru diinsert
@@ -268,7 +270,8 @@ try {
         'pm1_0' => $pm1_0,
         'pm2_5' => $pm2_5,
         'pm10' => $pm10,
-        'pollutant' => $pollutant
+        'pollutant' => $pollutant,
+        'ozone' => $ozone,
     ];
     
     // Kirim response JSON
