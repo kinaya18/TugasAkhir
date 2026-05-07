@@ -31,7 +31,7 @@ class Home extends BaseController
         if ($latestRaw) {
             $pm25 = (float) ($latestRaw['pm25'] ?? 0);
             $pm10 = (float) ($latestRaw['pm10'] ?? 0);
-            $nox  = 120; // sesuaikan jika ada kolom gas/nox di database
+            $polutan  = 120; // sesuaikan jika ada kolom gas/polutan di database
 
             // Hitung AQI sederhana berbasis PM2.5
             $aqi = $this->hitungAqi($pm25);
@@ -39,7 +39,7 @@ class Home extends BaseController
             $latestUdara = [
                 'pm25'       => $pm25,
                 'pm10'       => $pm10,
-                'nox'        => $nox,
+                'polutan'        => $polutan,
                 'suhu'       => (float) ($latestRaw['suhu']       ?? 0),
                 'kelembaban' => (float) ($latestRaw['kelembaban'] ?? 0),
                 'aqi'        => $aqi,
@@ -95,7 +95,7 @@ class Home extends BaseController
                 'aqi'      => $dailyAqi,
                 'pm25'     => rand(10, 50),
                 'pm10'     => rand(20, 80),
-                'nox'      => rand(50, 300),
+                'polutan'      => rand(50, 300),
                 'temp'     => rand(26, 32),
                 'humidity' => rand(65, 90),
                 'is_today' => $d === 0,

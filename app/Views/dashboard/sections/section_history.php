@@ -5,10 +5,10 @@
     <div class="timeline-card">
         <div class="timeline-card-header">
             <div>
-                <h3 class="timeline-card-title">Prakiraan AQI per Jam</h3>
+                <h3 class="timeline-card-title">Prakiraan AQHI per Jam</h3>
                 <p class="timeline-card-sub">Perkiraan kualitas udara 24 jam ke depan</p>
             </div>
-            <span class="timeline-now-badge" id="timeline-now-badge">-- AQI sekarang</span>
+            <span class="timeline-now-badge" id="timeline-now-badge">-- AQHI sekarang</span>
         </div>
         <div class="fc-scroll">
             <div class="fc-timeline" id="fc-timeline"></div>
@@ -30,7 +30,7 @@
                         <th>AQI</th>
                         <th>PM<sub>2.5</sub> (µg/m³)</th>
                         <th>PM<sub>10</sub> (µg/m³)</th>
-                        <th>NOx/VOC (ppm)</th>
+                        <th>polutan (ppm)</th>
                         <th>Temp. (°C)</th>
                         <th>Humi. (%)</th>
                         <th>Lokasi</th>
@@ -48,7 +48,7 @@
                         <td class="num-cell"><?= $item['aqi'] ?></td>
                         <td class="num-cell"><?= $item['pm25'] ?></td>
                         <td class="num-cell"><?= $item['pm10'] ?></td>
-                        <td class="num-cell"><?= $item['nox'] ?></td>
+                        <td class="num-cell"><?= $item['polutan'] ?></td>
                         <td class="num-cell"><?= $item['temp'] ?>°</td>
                         <td class="num-cell"><?= $item['humidity'] ?>%</td>
                         <td class="col-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
@@ -91,7 +91,7 @@
                     <option value="aqi">AQI</option>
                     <option value="pm25">PM2.5</option>
                     <option value="pm10">PM10</option>
-                    <option value="nox">NOx / VOC</option>
+                    <option value="polutan">polutan / VOC</option>
                     <option value="temp">Suhu</option>
                     <option value="humidity">Kelembapan</option>
                 </select>
@@ -116,18 +116,18 @@ const RWH_COLOR = {
     aqi:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=150?'#f97316':v<=200?'#ef4444':v<=300?'#a855f7':'#7f1d1d',
     pm25:     v => v<=12?'#22c55e':v<=35?'#eab308':v<=55?'#f97316':v<=150?'#ef4444':'#7f1d1d',
     pm10:     v => v<=54?'#22c55e':v<=154?'#eab308':v<=254?'#f97316':v<=354?'#ef4444':'#7f1d1d',
-    nox:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=199?'#f97316':v<=299?'#ef4444':'#7f1d1d',
+    polutan:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=199?'#f97316':v<=299?'#ef4444':'#7f1d1d',
     temp:     v => v<=15?'#60a5fa':v<=22?'#22c55e':v<=28?'#eab308':v<=35?'#f97316':'#ef4444',
     humidity: v => v<=25?'#ef4444':v<=39?'#f97316':v<=60?'#22c55e':v<=75?'#eab308':'#a855f7',
 };
 
-const RWH_UNIT = { aqi:'AQI', pm25:'µg/m³', pm10:'µg/m³', nox:'ppm', temp:'°C', humidity:'%' };
+const RWH_UNIT = { aqi:'AQI', pm25:'µg/m³', pm10:'µg/m³', polutan:'ppm', temp:'°C', humidity:'%' };
 
 const RWH_DESC = {
     aqi:      v => v<=50?'Baik':v<=100?'Sedang':v<=150?'Tidak sehat bagi kelompok sensitif':v<=200?'Tidak sehat':v<=300?'Sangat tidak sehat':'Berbahaya',
     pm25:     v => v<=12?'Baik':v<=35?'Sedang':v<=55?'Tidak sehat sensitif':v<=150?'Tidak sehat':'Berbahaya',
     pm10:     v => v<=54?'Baik':v<=154?'Sedang':v<=254?'Tidak sehat sensitif':'Tidak sehat',
-    nox:      v => v<=50?'Baik':v<=100?'Sedang':v<=199?'Tidak sehat sensitif':'Tidak sehat',
+    polutan:      v => v<=50?'Baik':v<=100?'Sedang':v<=199?'Tidak sehat sensitif':'Tidak sehat',
     temp:     v => v<=15?'Sangat dingin':v<=22?'Sejuk':v<=28?'Normal':v<=35?'Panas':'Sangat panas',
     humidity: v => v<=25?'Sangat kering':v<=39?'Kering':v<=60?'Optimal':v<=75?'Lembap':'Sangat lembap',
 };
@@ -149,7 +149,7 @@ function rwhGetDataset(tabKey, metricKey) {
     });
 
     const values = raw.map(item => {
-        if (metricKey === 'nox') return parseFloat(item.nox ?? item.gas ?? 0) || 0;
+        if (metricKey === 'polutan') return parseFloat(item.polutan ?? item.gas ?? 0) || 0;
         return parseFloat(item[metricKey]) || 0;
     });
 
@@ -226,24 +226,21 @@ rwhRender();
 // ============================================================
 // TIMELINE PER JAM
 // ============================================================
-function getAqiLabelShort(v) {
-    if (v <= 50)  return 'Good';
-    if (v <= 100) return 'Moderate';
-    if (v <= 150) return 'Sensitive';
-    if (v <= 200) return 'Unhealthy';
-    if (v <= 300) return 'Very Un.';
-    return 'Hazard';
+function getAqhiLabelShort(v) {
+    if (v <= 3)  return 'Low';
+    if (v <= 6)  return 'Moderate';
+    if (v <= 10) return 'High';
+    return 'Very High';
 }
-
 function formatHour(index) {
     const h = index % 24;
     return (h < 10 ? '0' : '') + h + ':00';
 }
 
 function generateDummyForecast() {
-    const baseAqi = [42,38,35,33,36,44,58,72,88,103,118,128,135,142,138,126,110,95,82,68,57,48,44,40];
-    const now     = new Date().getHours();
-    return baseAqi.map((aqi, i) => ({ aqi, time: formatHour((now + i) % 24) }));
+    const baseAqhi = [2,2,1,1,2,3,4,5,6,7,7,8,8,9,8,7,6,5,5,4,3,3,2,2];
+    const now      = new Date().getHours();
+    return baseAqhi.map((aqhi, i) => ({ aqhi, time: formatHour((now + i) % 24) }));
 }
 
 function onTimelineClick(clickedEl, item, color) {
@@ -262,7 +259,7 @@ function onTimelineClick(clickedEl, item, color) {
     const jam = item.time || item.jam || '--';
     const rwhVal  = document.getElementById('rwh-val');
     const rwhMeta = document.getElementById('rwh-meta');
-    if (rwhVal)  rwhVal.textContent  = aqi + ' AQI';
+    if (rwhVal)  rwhVal.textContent  = aqhi + ' AQHI';
     if (rwhMeta) rwhMeta.textContent = jam + ' · forecast';
 }
 
@@ -270,8 +267,8 @@ function renderTimeline() {
     const container = document.getElementById('fc-timeline');
     if (!container) return;
 
-    const data     = window.DASH.forecastHourly.length > 0 ? window.DASH.forecastHourly : generateDummyForecast();
-    const maxVal   = Math.max(...data.map(d => d.aqi));
+    const data   = window.DASH.forecastHourly.length > 0 ? window.DASH.forecastHourly : generateDummyForecast();
+    const maxVal = Math.max(...data.map(d => d.aqhi ?? d.aqi));
     const BAR_MAX  = 52;
     const nowHour  = new Date().getHours();
 
@@ -280,17 +277,18 @@ function renderTimeline() {
     const nowItem  = data[0];
     const nowBadge = document.getElementById('timeline-now-badge');
     if (nowBadge && nowItem) {
-        const nowColor = getAqiColor(parseFloat(nowItem.aqi));
-        nowBadge.textContent       = nowItem.aqi + ' AQI sekarang';
+        const nowVal   = parseFloat(nowItem.aqhi ?? nowItem.aqi) || 0;
+        const nowColor = getAqhiColor(nowVal);
+        nowBadge.textContent       = nowVal + ' AQHI sekarang';
         nowBadge.style.color       = nowColor;
         nowBadge.style.borderColor = nowColor + '55';
     }
 
     data.forEach((item, i) => {
-        const aqi      = parseFloat(item.aqi) || 0;
+        const aqhi  = parseFloat(item.aqhi ?? item.aqi) || 0;
         const jam      = item.time || item.jam || formatHour(i);
-        const color    = getAqiColor(aqi);
-        const barH     = Math.max(4, Math.round((aqi / Math.max(maxVal, 200)) * BAR_MAX));
+        const color = getAqhiColor(aqhi);
+        const barH  = Math.max(4, Math.round((aqhi / Math.max(maxVal, 11)) * BAR_MAX));
         const itemHour = parseInt(jam.split(':')[0]);
         const isNow    = itemHour === nowHour && i < 24;
 
@@ -303,8 +301,8 @@ function renderTimeline() {
             <div class="fc-h-bar-wrap">
                 <div class="fc-h-bar" style="height:${barH}px;background:${color};"></div>
             </div>
-            <span class="fc-h-val" style="color:${color};">${aqi}</span>
-            <span class="fc-h-label">${getAqiLabelShort(aqi)}</span>
+            <span class="fc-h-val" style="color:${color};">${aqhi}</span>
+            <span class="fc-h-label">${getAqhiLabelShort(aqhi)}</span>
         `;
 
         el.addEventListener('click', () => onTimelineClick(el, item, color));
@@ -352,7 +350,7 @@ function exportToExcel() {
             'AQI'            : aqi,
             'PM2.5 (µg/m³)'  : parseFloat(item.pm25) || 0,
             'PM10 (µg/m³)'   : parseFloat(item.pm10) || 0,
-            'NOx/VOC (ppm)'  : parseFloat(item.nox ?? item.gas) || 0,
+            'polutan/VOC (ppm)'  : parseFloat(item.polutan ?? item.gas) || 0,
             'Temp. (°C)'     : parseFloat(item.suhu ?? item.temp) || 0,
             'Humi. (%)'      : parseFloat(item.kelembaban ?? item.humidity) || 0,
             'Lokasi'         : item.location || window.DASH.latestData?.location || 'Ruang Utama',

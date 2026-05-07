@@ -8,7 +8,7 @@
                 <i id="popup-icon" class="fa-solid fa-wind"></i>
             </div>
             <div>
-                <h2 class="popup-title" id="popup-title">NOx / VOC</h2>
+                <h2 class="popup-title" id="popup-title">polutan</h2>
                 <p class="popup-subtitle" id="popup-subtitle">Gas Iritan</p>
             </div>
         </div>
@@ -66,9 +66,10 @@
 <script>
 // popupData diisi ulang oleh renderDashboard() di _section_hero.php
 const popupData = {
-    NOx:  { title:'NOx / VOC', subtitle:'Gas Iritan',        icon:'fa-wind',       iconColor:'#22c55e', value:'--', unit:'ppm',   status:'--', statusClass:'status-good',     needlePct:0, avgTitle:'NOx Average',   avgUnit:'ppm',   avg1:'--', avg8:'--', avg12:'--' },
+    polutan:  { title:'polutan ', subtitle:'Gas Iritan',        icon:'fa-wind',       iconColor:'#22c55e', value:'--', unit:'ppm',   status:'--', statusClass:'status-good',     needlePct:0, avgTitle:'polutan Average',   avgUnit:'ppm',   avg1:'--', avg8:'--', avg12:'--' },
     pm25: { title:'PM 2.5',    subtitle:'Partikel Halus',    icon:'fa-smog',       iconColor:'#22c55e', value:'--', unit:'µg/m³', status:'--', statusClass:'status-good',     needlePct:0, avgTitle:'PM2.5 Average', avgUnit:'µg/m³', avg1:'--', avg8:'--', avg12:'--' },
     pm10: { title:'PM 10',     subtitle:'Partikel Kasar',    icon:'fa-circle-dot', iconColor:'#f59e0b', value:'--', unit:'µg/m³', status:'--', statusClass:'status-moderate', needlePct:0, avgTitle:'PM10 Average',  avgUnit:'µg/m³', avg1:'--', avg8:'--', avg12:'--' },
+    pm1:  { title:'PM 1',      subtitle:'Partikel Ultrafine',icon:'fa-circle-dot', iconColor:'#a855f7', value:'--', unit:'µg/m³', status:'--', statusClass:'status-good',     needlePct:0, avgTitle:'PM1 Average',      avgUnit:'µg/m³', avg1:'--', avg8:'--', avg12:'--' },
     aqi:  { title:'AQI',       subtitle:'Air Quality Index', icon:'fa-gauge-high', iconColor:'#f59e0b', value:'--', unit:'AQI',   status:'--', statusClass:'status-moderate', needlePct:0, avgTitle:'AQI Average',   avgUnit:'index', avg1:'--', avg8:'--', avg12:'--' }
 };
 
