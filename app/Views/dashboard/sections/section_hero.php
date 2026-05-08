@@ -93,7 +93,7 @@
                         <span class="gauge-unit">AQI</span>
                     </div>
                 </div>
-                <p class="gauge-label">Air Quality</p>
+                <p class="gauge-label">AQI</p>
             </div>
 
             <div class="gauge-card" onclick="openPopup('pm25')">
@@ -280,7 +280,7 @@ function renderDashboard() {
     const pm25       = parseFloat(d.pm25)       || 0;
     const pm10       = parseFloat(d.pm10)       || 0;
     const pm1        = parseFloat(d.pm1)        || 0;
-    const polutan        = parseFloat(d.polutan)        || 0;
+    const polutan    = parseFloat(d.polutan)    || 0;
     const suhu       = parseFloat(d.suhu)       || 0;
     const kelembaban = parseFloat(d.kelembaban) || 0;
     const no2        = parseFloat(d.no2)        || 0;  // ppb

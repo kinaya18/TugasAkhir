@@ -27,9 +27,13 @@
                     <tr>
                         <th>Tanggal</th>
                         <th>Status</th>
+                        <th>AQHI</th>
                         <th>AQI</th>
                         <th>PM<sub>2.5</sub> (µg/m³)</th>
+                        <th>NO<sub>2</sub> (ppb)</th>
+                        <th>O<sub>3</sub> (ppb)</th>
                         <th>PM<sub>10</sub> (µg/m³)</th>
+                        <th>PM<sub>1</sub> (µg/m³)</th>
                         <th>polutan (ppm)</th>
                         <th>Temp. (°C)</th>
                         <th>Humi. (%)</th>
@@ -41,13 +45,17 @@
                     <tr class="<?= $item['is_today'] ? 'today-row' : '' ?>">
                         <td class="col-day"><?= $item['date'] ?></td>
                         <td>
-                            <span class="daily-status-pill <?= getDailyPillClass($item['aqi']) ?>">
-                                <?= getAqiLabel($item['aqi']) ?>
+                            <span class="daily-status-pill <?= getAqhiPillClass($item['aqhi']) ?>">
+                                <?= getAqhiLabel($item['aqhi']) ?>
                             </span>
                         </td>
+                        <td class="num-cell"><?= $item['aqhi'] ?></td>
                         <td class="num-cell"><?= $item['aqi'] ?></td>
                         <td class="num-cell"><?= $item['pm25'] ?></td>
+                        <td class="num-cell"><?= $item['no2'] ?></td>
+                        <td class="num-cell"><?= $item['o3'] ?></td>
                         <td class="num-cell"><?= $item['pm10'] ?></td>
+                        <td class="num-cell"><?= $item['pm1'] ?></td>
                         <td class="num-cell"><?= $item['polutan'] ?></td>
                         <td class="num-cell"><?= $item['temp'] ?>°</td>
                         <td class="num-cell"><?= $item['humidity'] ?>%</td>
@@ -88,8 +96,11 @@
                     <button class="rwh-tab"        onclick="rwhSetTab('bulan',this)">bulanan</button>
                 </div>
                 <select class="rwh-select" id="rwh-metric" onchange="rwhRender()">
+                    <option value="aqhi">AQHI</option>
                     <option value="aqi">AQI</option>
                     <option value="pm25">PM2.5</option>
+                    <option value="no2">NO₂</option>
+                    <option value="o3">O₃</option>
                     <option value="pm10">PM10</option>
                     <option value="polutan">polutan / VOC</option>
                     <option value="temp">Suhu</option>
@@ -114,20 +125,29 @@
 // ============================================================
 const RWH_COLOR = {
     aqi:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=150?'#f97316':v<=200?'#ef4444':v<=300?'#a855f7':'#7f1d1d',
+    aqhi:     v => v<=3?'#22c55e':v<=6?'#f59e0b':v<=10?'#ef4444':'#7f1d1d',
     pm25:     v => v<=12?'#22c55e':v<=35?'#eab308':v<=55?'#f97316':v<=150?'#ef4444':'#7f1d1d',
     pm10:     v => v<=54?'#22c55e':v<=154?'#eab308':v<=254?'#f97316':v<=354?'#ef4444':'#7f1d1d',
-    polutan:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=199?'#f97316':v<=299?'#ef4444':'#7f1d1d',
+    no2:      v => v<=40?'#22c55e':v<=100?'#eab308':v<=200?'#f97316':v<=400?'#ef4444':'#7f1d1d',
+    o3:       v => v<=50?'#22c55e':v<=100?'#eab308':v<=168?'#f97316':v<=208?'#ef4444':'#7f1d1d',
+    polutan:  v => v<=50?'#22c55e':v<=100?'#eab308':v<=199?'#f97316':v<=299?'#ef4444':'#7f1d1d',
     temp:     v => v<=15?'#60a5fa':v<=22?'#22c55e':v<=28?'#eab308':v<=35?'#f97316':'#ef4444',
     humidity: v => v<=25?'#ef4444':v<=39?'#f97316':v<=60?'#22c55e':v<=75?'#eab308':'#a855f7',
 };
 
-const RWH_UNIT = { aqi:'AQI', pm25:'µg/m³', pm10:'µg/m³', polutan:'ppm', temp:'°C', humidity:'%' };
+const RWH_UNIT = {
+    aqi:'AQI', aqhi:'AQHI', pm25:'µg/m³', pm10:'µg/m³',
+    no2:'ppb', o3:'ppb', polutan:'ppm', temp:'°C', humidity:'%'
+};
 
 const RWH_DESC = {
     aqi:      v => v<=50?'Baik':v<=100?'Sedang':v<=150?'Tidak sehat bagi kelompok sensitif':v<=200?'Tidak sehat':v<=300?'Sangat tidak sehat':'Berbahaya',
+    aqhi:     v => v<=3?'Risiko rendah':v<=6?'Risiko sedang':v<=10?'Risiko tinggi':'Risiko sangat tinggi',
     pm25:     v => v<=12?'Baik':v<=35?'Sedang':v<=55?'Tidak sehat sensitif':v<=150?'Tidak sehat':'Berbahaya',
     pm10:     v => v<=54?'Baik':v<=154?'Sedang':v<=254?'Tidak sehat sensitif':'Tidak sehat',
-    polutan:      v => v<=50?'Baik':v<=100?'Sedang':v<=199?'Tidak sehat sensitif':'Tidak sehat',
+    no2:      v => v<=40?'Baik':v<=100?'Sedang':v<=200?'Tidak sehat sensitif':v<=400?'Tidak sehat':'Berbahaya',
+    o3:       v => v<=50?'Baik':v<=100?'Sedang':v<=168?'Tidak sehat sensitif':v<=208?'Tidak sehat':'Berbahaya',
+    polutan:  v => v<=50?'Baik':v<=100?'Sedang':v<=199?'Tidak sehat sensitif':'Tidak sehat',
     temp:     v => v<=15?'Sangat dingin':v<=22?'Sejuk':v<=28?'Normal':v<=35?'Panas':'Sangat panas',
     humidity: v => v<=25?'Sangat kering':v<=39?'Kering':v<=60?'Optimal':v<=75?'Lembap':'Sangat lembap',
 };
@@ -232,6 +252,14 @@ function getAqhiLabelShort(v) {
     if (v <= 10) return 'High';
     return 'Very High';
 }
+
+function getAqhiLabelExport(v) {
+    if (v <= 3)  return 'Low';
+    if (v <= 6)  return 'Moderate';
+    if (v <= 10) return 'High';
+    return 'Very High';
+}
+
 function formatHour(index) {
     const h = index % 24;
     return (h < 10 ? '0' : '') + h + ':00';
@@ -340,30 +368,48 @@ function exportToExcel() {
             }
         }
 
-        const aqi = parseFloat(item.aqi) || 0;
+        const aqi  = parseFloat(item.aqi)  || 0;
+        const aqhi = parseFloat(item.aqhi) || 0;
 
         return {
-            'Bulan'          : item.bulan || (rawDate ? new Date(rawDate).toLocaleString('id-ID', { month:'long', year:'numeric' }) : ''),
-            'Hari & Tanggal' : hariTanggal,
-            'Jam'            : jam,
-            'Status'         : getAqiLabel(aqi),
-            'AQI'            : aqi,
-            'PM2.5 (µg/m³)'  : parseFloat(item.pm25) || 0,
-            'PM10 (µg/m³)'   : parseFloat(item.pm10) || 0,
+            'Bulan'              : item.bulan || (rawDate ? new Date(rawDate).toLocaleString('id-ID', { month:'long', year:'numeric' }) : ''),
+            'Hari & Tanggal'     : hariTanggal,
+            'Jam'                : jam,
+            'Status'             : aqhi > 0 ? getAqhiLabelExport(aqhi) : getAqiLabel(aqi),
+            'AQHI'               : aqhi,
+            'AQI'                : aqi,
+            'PM2.5 (µg/m³)'     : parseFloat(item.pm25)  || 0,
+            'NO2 (ppb)'          : parseFloat(item.no2)   || 0,
+            'O3 (ppb)'           : parseFloat(item.o3)    || 0,
+            'PM10 (µg/m³)'      : parseFloat(item.pm10)  || 0,
+            'PM1 (µg/m³)'       : parseFloat(item.pm1)   || 0,
             'polutan/VOC (ppm)'  : parseFloat(item.polutan ?? item.gas) || 0,
-            'Temp. (°C)'     : parseFloat(item.suhu ?? item.temp) || 0,
-            'Humi. (%)'      : parseFloat(item.kelembaban ?? item.humidity) || 0,
-            'Lokasi'         : item.location || window.DASH.latestData?.location || 'Ruang Utama',
+            'Temp. (°C)'         : parseFloat(item.suhu ?? item.temp)   || 0,
+            'Humi. (%)'          : parseFloat(item.kelembaban ?? item.humidity) || 0,
+            'Lokasi'             : item.location || window.DASH.latestData?.location || 'Ruang Utama',
         };
     });
 
     if (rows.length === 0) { alert('Tidak ada data untuk diekspor.'); return; }
 
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [
-        {wch:16},{wch:22},{wch:8},{wch:18},{wch:10},
-        {wch:14},{wch:14},{wch:14},{wch:12},{wch:10},{wch:16}
-    ];
+        ws['!cols'] = [
+            {wch:16}, // Bulan
+            {wch:22}, // Hari & Tanggal
+            {wch:8},  // Jam
+            {wch:14}, // Status
+            {wch:8},  // AQHI
+            {wch:8},  // AQI
+            {wch:14}, // PM2.5
+            {wch:10}, // NO2
+            {wch:10}, // O3
+            {wch:14}, // PM10
+            {wch:14}, // PM1
+            {wch:16}, // polutan/VOC
+            {wch:12}, // Temp
+            {wch:10}, // Humi
+            {wch:16}, // Lokasi
+        ];
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Riwayat Harian');
