@@ -41,7 +41,14 @@
         <div class="logo d-flex align-items-center">
             <a href="<?= base_url('dashboard') ?>" class="d-flex align-items-center text-decoration-none">
                 <img src="<?= base_url('assets/images/logo/kualitas-udara.png') ?>" class="logo-img" />
-                <span class="logo-text logo-white ms-2">Pemantau Kualitas Udara</span>
+                <div class="logo-title-wrap ms-3">
+                    <span class="logo-eyebrow">
+                        SMART AIRCARE
+                    </span>
+                    <span class="logo-title">
+                        Pemantau Kualitas Udara
+                    </span>
+                </div>
             </a>
         </div>
     </div>

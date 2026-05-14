@@ -25,13 +25,48 @@
 
 /* ===== HERO CARD ===== */
 .hero-card {
-    background: #fffde7;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
     border-radius: 20px;
     padding: 18px 20px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    transition:
+        background 0.4s ease,
+        border-color 0.4s ease,
+        border-left-color 0.4s ease;
+}
+
+/* =========================================
+   HERO CARD AQHI STATES
+========================================= */
+
+.hero-card.hero-low {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.hero-card.hero-moderate {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+.hero-card.hero-high {
+    background: #fff7ed;
+    border-color: #fdba74;
+}
+
+.hero-card.hero-very-high {
+    background: #fef2f2;
+    border-color: #fecaca;
 }
 
 .hero-badge-row {
@@ -332,3 +367,4 @@
     color: #475569;
     font-weight: 500;
 }
+

@@ -1,3 +1,20 @@
+<?php
+
+$aqhi = $latestUdara['aqhi'] ?? 1;
+
+$aqhiClass = 'low';
+
+if ($aqhi > 3 && $aqhi <= 6) {
+    $aqhiClass = 'moderate';
+}
+elseif ($aqhi > 6 && $aqhi <= 10) {
+    $aqhiClass = 'high';
+}
+elseif ($aqhi > 10) {
+    $aqhiClass = 'very-high';
+}
+?>
+
 <?= $this->extend('layout/main_layout') ?>
 <?= $this->section('content') ?>
 

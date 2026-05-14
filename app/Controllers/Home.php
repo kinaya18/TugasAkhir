@@ -15,194 +15,256 @@ class Home extends BaseController
 
     public function index()
     {
-        helper('aqi');
+        helper('air');
 
-        // Fix timezone WIB
         date_default_timezone_set('Asia/Jakarta');
 
-        // =====================
-        // DATA TERBARU (untuk dashboard utama)
-        // =====================
-        $allData     = $this->dataUdaraModel->orderBy('id', 'DESC')->findAll();
-        $latestRaw   = $this->dataUdaraModel->orderBy('id', 'DESC')->first();
+        $db = \Config\Database::connect();
 
-        // Hitung AQI dari pm25 jika kolom aqi belum ada
-        $latestUdara = null;
+        // ==================================================
+        // HERO REALTIME (DATA TERBARU)
+        // ==================================================
+        $latestRaw = $this->dataUdaraModel
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        $latestUdara = [];
+
         if ($latestRaw) {
-            $pm25 = (float) ($latestRaw['pm25'] ?? 0);
-            $pm10 = (float) ($latestRaw['pm10'] ?? 0);
-            $polutan  = 120; // sesuaikan jika ada kolom gas/polutan di database
 
-            // Hitung AQI sederhana berbasis PM2.5
+            $pm25 = (float) ($latestRaw['pm2_5'] ?? 0);
+
             $aqi = $this->hitungAqi($pm25);
 
             $latestUdara = [
-                'pm25'       => $pm25,
-                'pm10'       => $pm10,
-                'polutan'        => $polutan,
-                'suhu'       => (float) ($latestRaw['suhu']       ?? 0),
-                'kelembaban' => (float) ($latestRaw['kelembaban'] ?? 0),
-                'aqi'        => $aqi,
+                'aqi'         => $aqi,
+                'aqhi' => calcAqhi(
+                    (float) ($latestRaw['no2'] ?? 0),
+                    (float) ($latestRaw['ozone'] ?? 0),
+                    (float) ($latestRaw['pm2_5'] ?? 0)
+                ),
+                'pm25'        => (float) ($latestRaw['pm2_5'] ?? 0),
+                'pm10'        => (float) ($latestRaw['pm10'] ?? 0),
+                'pm1'         => (float) ($latestRaw['pm1_0'] ?? 0),
+                'polutan'     => (float) ($latestRaw['pollutant'] ?? 0),
+                'o3'          => (float) ($latestRaw['ozone'] ?? 0),
+                'no2'         => (float) ($latestRaw['no2'] ?? 0),
+                'suhu'        => (float) ($latestRaw['temperature'] ?? 0),
+                'kelembaban'  => (float) ($latestRaw['humidity'] ?? 0),
+                'location'    => 'Bojongsoang',
+                'timestamp'   => $latestRaw['timestamp'] ?? null,
             ];
         }
 
-        // =====================
-        // HOURLY (24 jam simulasi / bisa diganti query real)
-        // =====================
+        // ==================================================
+        // HOURLY HISTORY (RATA-RATA PER JAM)
+        // ==================================================
+        $hourlyQuery = $db->query("
+            SELECT 
+                HOUR(timestamp) as jam,
+                AVG(pm2_5) as pm25,
+                AVG(pm10) as pm10,
+                AVG(pm1_0) as pm1,
+                AVG(pollutant) as polutan,
+                AVG(ozone) as o3,
+                AVG(no2) as no2,
+                AVG(temperature) as temp,
+                AVG(humidity) as humidity
+            FROM data_udara
+            WHERE DATE(timestamp) = CURDATE()
+            GROUP BY HOUR(timestamp)
+            ORDER BY jam ASC
+        ");
+
         $historyHourly = [];
 
-        for ($i = 0; $i < 24; $i++) {
-            $timestamp = strtotime("-$i hours");
+        foreach ($hourlyQuery->getResultArray() as $row) {
 
-            $no2  = rand(10, 200); 
-            $o3   = rand(20, 180); 
-            $pm25 = rand(5, 120);   
+            $aqi = $this->hitungAqi((float)$row['pm25']);
 
             $historyHourly[] = [
-                'time'     => date('H:00', $timestamp),
-                'aqhi'     => calcAqhi($no2, $o3, $pm25),
-                'aqi'      => rand(20, 250),
-                'pm25'     => $pm25,
-                'no2'      => $no2,
-                'o3'       => $o3,
-                'pm10'     => rand(20, 80),
-                'pm1'      => rand(5, 30),
-                'gas'      => rand(50, 300),
-                'temp'     => rand(24, 34),
-                'humidity' => rand(55, 85),
+                'date'       => date('d M Y'),
+                'time'       => sprintf('%02d:00', $row['jam']),
+                'aqhi' => calcAqhi(
+                    (float) $row['no2'],
+                    (float) $row['o3'],
+                    (float) $row['pm25']
+                ),
+                'aqi'        => $aqi,
+                'pm25'       => round($row['pm25'], 1),
+                'pm10'       => round($row['pm10'], 1),
+                'pm1'        => round($row['pm1'], 1),
+                'polutan'    => round($row['polutan'], 1),
+                'o3'         => round($row['o3'], 1),
+                'no2'        => round($row['no2'], 1),
+                'temp'       => round($row['temp'], 1),
+                'humidity'   => round($row['humidity'], 1),
+                'location'   => 'Bojongsoang',
             ];
         }
 
-        // Balik agar urutan dari jam terlama ke terbaru
-        $historyHourly = array_reverse($historyHourly);
+        // ==================================================
+        // DAILY HISTORY (RATA-RATA PER HARI)
+        // ==================================================
+        $dailyQuery = $db->query("
+            SELECT 
+                DATE(timestamp) as tanggal,
+                AVG(pm2_5) as pm25,
+                AVG(pm10) as pm10,
+                AVG(pm1_0) as pm1,
+                AVG(pollutant) as polutan,
+                AVG(ozone) as o3,
+                AVG(no2) as no2,
+                AVG(temperature) as temp,
+                AVG(humidity) as humidity
+            FROM data_udara
+            GROUP BY DATE(timestamp)
+            ORDER BY tanggal DESC
+            LIMIT 7
+        ");
 
-        // =====================
-        // DAILY (7 hari)
-        // =====================
         $historyDaily = [];
 
-        $hariIndo = [
-            'Sun' => 'Minggu', 'Mon' => 'Senin',  'Tue' => 'Selasa',
-            'Wed' => 'Rabu',   'Thu' => 'Kamis',   'Fri' => 'Jumat',
-            'Sat' => 'Sabtu',
-        ];
+        $counter = 0;
 
-        for ($d = 0; $d < 7; $d++) {
-            $timestamp = strtotime("-$d days");
-            $hari      = date('D', $timestamp);
-            $labelHari = $d === 0 ? 'Hari ini' : $hariIndo[$hari];
+        foreach ($dailyQuery->getResultArray() as $row) {
 
-            $aqiPerJam = [];
-            for ($h = 0; $h < 24; $h++) {
-                $aqiPerJam[] = rand(20, 250);
-            }
-            $dailyAqi = round(array_sum($aqiPerJam) / count($aqiPerJam));
-
-            $no2  = rand(10, 200);
-            $o3   = rand(20, 180);
-            $pm25 = rand(5, 120);
-            $pm10 = rand(20, 80);
-            $pm1  = rand(5, 30);
+            $aqi = $this->hitungAqi((float)$row['pm25']);
 
             $historyDaily[] = [
-                'date'     => $labelHari,
-                'aqhi'     => calcAqhi($no2, $o3, $pm25),
-                'aqi'      => $dailyAqi,
-                'pm25'     => $pm25,
-                'no2'      => $no2,
-                'o3'       => $o3,
-                'pm10'     => $pm10,
-                'pm1'      => $pm1,
-                'polutan'  => rand(50, 300),
-                'temp'     => rand(26, 32),
-                'humidity' => rand(65, 90),
-                'is_today' => $d === 0,
+                'date'       => date('d M Y', strtotime($row['tanggal'])),
+                'is_today'   => $counter === 0,
+                'aqhi' => calcAqhi(
+                    (float) $row['no2'],
+                    (float) $row['o3'],
+                    (float) $row['pm25']
+                ),
+                'aqi'        => $aqi,
+                'pm25'       => round($row['pm25'], 1),
+                'pm10'       => round($row['pm10'], 1),
+                'pm1'        => round($row['pm1'], 1),
+                'polutan'    => round($row['polutan'], 1),
+                'o3'         => round($row['o3'], 1),
+                'no2'        => round($row['no2'], 1),
+                'temp'       => round($row['temp'], 1),
+                'humidity'   => round($row['humidity'], 1),
+                'location'   => 'Bojongsoang',
             ];
+
+            $counter++;
         }
 
-        // =====================
-        // MONTHLY (12 bulan)
-        // =====================
+        // ==================================================
+        // MONTHLY HISTORY (RATA-RATA PER BULAN)
+        // ==================================================
+        $monthlyQuery = $db->query("
+            SELECT 
+                DATE_FORMAT(timestamp, '%Y-%m') as bulan,
+                AVG(pm2_5) as pm25,
+                AVG(pm10) as pm10,
+                AVG(pm1_0) as pm1,
+                AVG(pollutant) as polutan,
+                AVG(ozone) as o3,
+                AVG(no2) as no2,
+                AVG(temperature) as temp,
+                AVG(humidity) as humidity
+            FROM data_udara
+            GROUP BY DATE_FORMAT(timestamp, '%Y-%m')
+            ORDER BY bulan ASC
+        ");
+
         $historyMonthly = [];
 
-        $bulanIndo = [
-            1=>'Jan', 2=>'Feb', 3=>'Mar', 4=>'Apr',
-            5=>'Mei', 6=>'Jun', 7=>'Jul', 8=>'Agu',
-            9=>'Sep', 10=>'Okt', 11=>'Nov', 12=>'Des'
-        ];
+        foreach ($monthlyQuery->getResultArray() as $row) {
 
-        for ($m = 11; $m >= 0; $m--) {
-            $timestamp = strtotime("-$m months");
-            $bulan     = (int) date('n', $timestamp);
-
-            $no2  = rand(10, 200);
-            $o3   = rand(20, 180);
-            $pm25 = rand(5, 120);
+            $aqi = $this->hitungAqi((float)$row['pm25']);
 
             $historyMonthly[] = [
-                'month'    => $bulanIndo[$bulan],
-                'aqhi'     => calcAqhi($no2, $o3, $pm25),
-                'aqi'      => rand(20, 250),
-                'pm25'     => $pm25,
-                'no2'      => $no2,
-                'o3'       => $o3,
-                'pm10'     => rand(20, 80),
-                'pm1'      => rand(5, 30),
-                'polutan'  => rand(50, 300),
-                'temp'     => rand(26, 32),
-                'humidity' => rand(65, 90),
+                'month'      => date('M Y', strtotime($row['bulan'] . '-01')),
+                'aqhi' => calcAqhi(
+                    (float) $row['no2'],
+                    (float) $row['o3'],
+                    (float) $row['pm25']
+                ),
+                'aqi'        => $aqi,
+                'pm25'       => round($row['pm25'], 1),
+                'pm10'       => round($row['pm10'], 1),
+                'pm1'        => round($row['pm1'], 1),
+                'polutan'    => round($row['polutan'], 1),
+                'o3'         => round($row['o3'], 1),
+                'no2'        => round($row['no2'], 1),
+                'temp'       => round($row['temp'], 1),
+                'humidity'   => round($row['humidity'], 1),
+                'location'   => 'Bojongsoang',
             ];
         }
 
+        // ==================================================
+        // SEND TO VIEW
+        // ==================================================
         $data = [
-            'title'         => 'Dashboard',
-            'latestUdara'   => $latestUdara,
-            'historyHourly' => $historyHourly,
-            'historyDaily'  => $historyDaily,
-            'historyMonthly' => $historyMonthly,
+            'title'           => 'Dashboard',
+            'latestUdara'     => $latestUdara,
+            'historyHourly'   => $historyHourly,
+            'historyDaily'    => $historyDaily,
+            'historyMonthly'  => $historyMonthly,
+            'forecastHourly'  => [],
         ];
 
         return view('dashboard', $data);
     }
 
+    // ==================================================
+    // INSERT DATA DARI ESP32
+    // ==================================================
     public function insert()
     {
         $data = [
-            'pm25'       => $this->request->getPost('pm25'),
-            'pm10'       => $this->request->getPost('pm10'),
-            'suhu'       => $this->request->getPost('suhu'),
-            'kelembaban' => $this->request->getPost('kelembaban'),
+            'temperature' => $this->request->getPost('temperature'),
+            'humidity'    => $this->request->getPost('humidity'),
+            'pm1_0'       => $this->request->getPost('pm1_0'),
+            'pm2_5'       => $this->request->getPost('pm2_5'),
+            'pm10'        => $this->request->getPost('pm10'),
+            'pollutant'   => $this->request->getPost('pollutant'),
+            'ozone'       => $this->request->getPost('ozone'),
+            'no2'         => $this->request->getPost('no2'),
         ];
 
         $this->dataUdaraModel->insert($data);
 
-        return $this->response->setJSON(['status' => 'success']);
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $data
+        ]);
     }
 
-    // =====================
-    // HELPER: Hitung AQI dari PM2.5
-    // =====================
+    // ==================================================
+    // HITUNG AQI DARI PM2.5
+    // ==================================================
     private function hitungAqi(float $pm25): int
     {
-        // Breakpoint standar US EPA untuk PM2.5
         $breakpoints = [
-            ['cLow' =>   0.0, 'cHigh' =>  12.0, 'iLow' =>  0, 'iHigh' =>  50],
-            ['cLow' =>  12.1, 'cHigh' =>  35.4, 'iLow' => 51, 'iHigh' => 100],
-            ['cLow' =>  35.5, 'cHigh' =>  55.4, 'iLow' => 101,'iHigh' => 150],
-            ['cLow' =>  55.5, 'cHigh' => 150.4, 'iLow' => 151,'iHigh' => 200],
-            ['cLow' => 150.5, 'cHigh' => 250.4, 'iLow' => 201,'iHigh' => 300],
-            ['cLow' => 250.5, 'cHigh' => 500.4, 'iLow' => 301,'iHigh' => 500],
+            ['cLow'=>0.0,'cHigh'=>12.0,'iLow'=>0,'iHigh'=>50],
+            ['cLow'=>12.1,'cHigh'=>35.4,'iLow'=>51,'iHigh'=>100],
+            ['cLow'=>35.5,'cHigh'=>55.4,'iLow'=>101,'iHigh'=>150],
+            ['cLow'=>55.5,'cHigh'=>150.4,'iLow'=>151,'iHigh'=>200],
+            ['cLow'=>150.5,'cHigh'=>250.4,'iLow'=>201,'iHigh'=>300],
+            ['cLow'=>250.5,'cHigh'=>500.4,'iLow'=>301,'iHigh'=>500],
         ];
 
         foreach ($breakpoints as $bp) {
+
             if ($pm25 >= $bp['cLow'] && $pm25 <= $bp['cHigh']) {
-                $aqi = (($bp['iHigh'] - $bp['iLow']) / ($bp['cHigh'] - $bp['cLow']))
-                     * ($pm25 - $bp['cLow'])
-                     + $bp['iLow'];
-                return (int) round($aqi);
+
+                $aqi = (
+                    ($bp['iHigh'] - $bp['iLow']) /
+                    ($bp['cHigh'] - $bp['cLow'])
+                ) * ($pm25 - $bp['cLow']) + $bp['iLow'];
+
+                return round($aqi);
             }
         }
 
-        return $pm25 > 500 ? 500 : 0;
+        return 0;
     }
 }

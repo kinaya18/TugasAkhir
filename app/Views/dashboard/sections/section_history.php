@@ -4,9 +4,9 @@
     <!-- TIMELINE SCROLLABLE PER JAM -->
     <div class="timeline-card">
         <div class="timeline-card-header">
-            <div>
-                <h3 class="timeline-card-title">Prakiraan AQHI per Jam</h3>
-                <p class="timeline-card-sub">Perkiraan kualitas udara 24 jam ke depan</p>
+            <div >
+                <span class="hd-eyebrow">AQHI Forecast</span>
+                <h4 class="hd-title">24-Hour Prediction</h4>
             </div>
             <span class="timeline-now-badge" id="timeline-now-badge">-- AQHI sekarang</span>
         </div>
@@ -15,105 +15,315 @@
         </div>
     </div>
 
-    <!-- DAILY TABLE -->
-    <div class="history-card-box daily-card-box">
-        <div class="daily-card-header">
-            <h4>Riwayat Harian</h4>
-        </div>
-
-        <div class="daily-tbl-wrap">
-            <table class="daily-tbl">
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>Status</th>
-                        <th>AQHI</th>
-                        <th>AQI</th>
-                        <th>PM<sub>2.5</sub> (µg/m³)</th>
-                        <th>NO<sub>2</sub> (ppb)</th>
-                        <th>O<sub>3</sub> (ppb)</th>
-                        <th>PM<sub>10</sub> (µg/m³)</th>
-                        <th>PM<sub>1</sub> (µg/m³)</th>
-                        <th>polutan (ppm)</th>
-                        <th>Temp. (°C)</th>
-                        <th>Humi. (%)</th>
-                        <th>Lokasi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($historyDaily as $item): ?>
-                    <tr class="<?= $item['is_today'] ? 'today-row' : '' ?>">
-                        <td class="col-day"><?= $item['date'] ?></td>
-                        <td>
-                            <span class="daily-status-pill <?= getAqhiPillClass($item['aqhi']) ?>">
-                                <?= getAqhiLabel($item['aqhi']) ?>
-                            </span>
-                        </td>
-                        <td class="num-cell"><?= $item['aqhi'] ?></td>
-                        <td class="num-cell"><?= $item['aqi'] ?></td>
-                        <td class="num-cell"><?= $item['pm25'] ?></td>
-                        <td class="num-cell"><?= $item['no2'] ?></td>
-                        <td class="num-cell"><?= $item['o3'] ?></td>
-                        <td class="num-cell"><?= $item['pm10'] ?></td>
-                        <td class="num-cell"><?= $item['pm1'] ?></td>
-                        <td class="num-cell"><?= $item['polutan'] ?></td>
-                        <td class="num-cell"><?= $item['temp'] ?>°</td>
-                        <td class="num-cell"><?= $item['humidity'] ?>%</td>
-                        <td class="col-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+<!-- DAILY TABLE -->
+<div class="history-card-box hd-card">
+    <div class="hd-header">
+        <div class="hd-title-group">
+            <span class="hd-eyebrow">Historical Data</span>
+            <h4 class="hd-title">Air Quality Table</h4>
         </div>
     </div>
 
-    <!-- CHART CARD -->
-    <div class="history-card-box daily-card-box">
-        <div class="daily-card-header">
-            <h4>Grafik Riwayat</h4>
-            <button class="export-btn" onclick="exportToExcel()">
-                <i class="fa-solid fa-file-excel"></i> Export Excel
+<div class="hd-controls">
+
+    <!-- LEFT -->
+    <div style="display:flex; align-items:center; gap:14px;">
+
+        <div class="hd-toggle">
+
+            <button class="hd-tab active"
+                    id="btn-jam"
+                    onclick="hdSetView('jam',this)">
+
+                <i class="fa-solid fa-clock"></i>
+                Per Jam
+
             </button>
+
+            <button class="hd-tab"
+                    id="btn-hari"
+                    onclick="hdSetView('hari',this)">
+
+                <i class="fa-solid fa-calendar-day"></i>
+                Per Hari
+
+            </button>
+
         </div>
 
-        <div class="rwh-header"></div>
+        <!-- EXPORT TOOLBAR -->
+        <div class="hd-export-toolbar">
 
-        <div class="rwh-controls">
-            <div class="rwh-highlight">
-                <span class="rwh-dot" id="rwh-dot"></span>
-                <div>
-                    <div class="rwh-val-row">
-                        <span class="rwh-val" id="rwh-val">--</span>
-                        <span class="rwh-desc" id="rwh-desc"></span>
-                    </div>
-                    <div class="rwh-meta" id="rwh-meta">--</div>
+            <button class="hd-export-btn hd-btn-copy"
+                    onclick="hdExport('copy')"
+                    title="Copy to Clipboard">
+
+                <i class="fa-regular fa-copy"></i>
+
+            </button>
+
+            <button class="hd-export-btn hd-btn-csv"
+                    onclick="hdExport('csv')"
+                    title="Export CSV">
+
+                <i class="fa-solid fa-file-csv"></i>
+
+            </button>
+
+            <button class="hd-export-btn hd-btn-excel"
+                    onclick="hdExport('excel')"
+                    title="Export Excel">
+
+                <i class="fa-solid fa-file-excel"></i>
+
+            </button>
+
+            <button class="hd-export-btn hd-btn-pdf"
+                    onclick="hdExport('pdf')"
+                    title="Export PDF">
+
+                <i class="fa-solid fa-file-pdf"></i>
+
+            </button>
+
+            <button class="hd-export-btn hd-btn-print"
+                    onclick="hdExport('print')"
+                    title="Print">
+
+                <i class="fa-solid fa-print"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hd-search-wrap">
+
+        <i class="fa-solid fa-magnifying-glass hd-search-icon"></i>
+
+        <input type="text"
+               id="hd-search"
+               class="hd-search"
+               placeholder="Filter by keyword..."
+               oninput="hdFilter()" />
+
+        <button class="hd-clear"
+                id="hd-clear"
+                onclick="hdClear()"
+                title="Clear">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+    </div>
+
+</div>
+<div class="hd-inner-card">
+    <div class="hd-tbl-wrap">
+        <table class="hd-tbl">
+            <thead>
+                <tr>
+                    <th id="th-primary">TIME ▼</th>
+                    <th>AQHI</th>
+                    <th>AQI</th>
+                    <th>PM2.5</th>
+                    <th>PM10</th>
+                    <th>PM1</th>
+                    <th>NO<sub>2</sub></th>
+                    <th>O<sub>3</sub></th>
+                    <th>TEMP</th>
+                    <th>HUMIDITY</th>
+                    <th>LOCATION</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody id="hd-tbody">
+                <?php foreach ($historyHourly as $item): ?>
+                <tr class="<?= !empty($item['is_today']) ? 'today-row' : '' ?>" data-view="jam">
+                    <td class="td-time"><?= $item['time'] ?? '--' ?></td>
+                    <td class="td-aqhi"><?= $item['aqhi'] ?? '-' ?></td>
+                    <td><?= $item['aqi'] ?? '-' ?></td>
+                    <td><?= $item['pm25'] ?? '-' ?></td>
+                    <td><?= $item['pm10'] ?? '-' ?></td>
+                    <td><?= $item['pm1'] ?? '-' ?></td>
+                    <td><?= $item['no2'] ?? '-' ?></td>
+                    <td><?= $item['o3'] ?? '-' ?></td>
+                    <td><?= $item['temp'] ?? '-' ?>°C</td>
+                    <td><?= $item['humidity'] ?? '-' ?>%</td>
+                    <td class="td-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
+                    <td><span class="pill <?= getAqhiPillClass($item['aqhi'] ?? 0) ?>"><?= getAqhiLabel($item['aqhi'] ?? 0) ?></span></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php foreach ($historyDaily as $item): ?>
+                <tr class="<?= !empty($item['is_today']) ? 'today-row' : '' ?>" data-view="hari" style="display:none;">
+                    <td class="td-date"><?= $item['date'] ?? '--' ?></td>
+                    <td class="td-aqhi"><?= $item['aqhi'] ?? '-' ?></td>
+                    <td><?= $item['aqi'] ?? '-' ?></td>
+                    <td><?= $item['pm25'] ?? '-' ?></td>
+                    <td><?= $item['pm10'] ?? '-' ?></td>
+                    <td><?= $item['pm1'] ?? '-' ?></td>
+                    <td><?= $item['no2'] ?? '-' ?></td>
+                    <td><?= $item['o3'] ?? '-' ?></td>
+                    <td><?= $item['temp'] ?? '-' ?>°C</td>
+                    <td><?= $item['humidity'] ?? '-' ?>%</td>
+                    <td class="td-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
+                    <td><span class="pill <?= getAqhiPillClass($item['aqhi'] ?? 0) ?>"><?= getAqhiLabel($item['aqhi'] ?? 0) ?></span></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <div class="hd-empty" id="hd-empty">
+            <i class="fa-solid fa-inbox"></i>
+            <span>No data matches "<span id="hd-empty-kw"></span>"</span>
+        </div>
+    </div>
+    <div class="hd-footer">
+
+        <div class="hd-entries">
+
+            <span>Show</span>
+
+            <select id="hd-entries-select"
+                    onchange="hdChangeEntries()">
+
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="9999">All</option>
+
+            </select>
+
+            <span>entries</span>
+
+        </div>
+
+        <div class="hd-footer-info"
+            id="hd-footer-info">
+
+            Showing 1 to 10 entries
+
+        </div>
+
+    </div>
+</div>
+</div>
+
+<!-- CHART CARD -->
+<div class="history-card-box daily-card-box">
+
+    <div class="daily-card-header">
+
+        <div>
+            <span class="hd-eyebrow">HISTORY GRAPH</span>
+            <h4>Air Quality Trend</h4>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+
+            <!-- TOGGLE BAR / LINE -->
+            <div class="graph-toggle">
+
+                <button class="graph-btn active"
+                        id="btn-bar"
+                        onclick="setChartType('bar', this)"
+                        title="Bar Chart">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </button>
+
+                <button class="graph-btn"
+                        id="btn-line"
+                        onclick="setChartType('line', this)"
+                        title="Line Chart">
+
+                    <i class="fa-solid fa-chart-line"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="rwh-header"></div>
+
+    <div class="rwh-controls">
+
+        <div class="rwh-highlight">
+
+            <span class="rwh-dot" id="rwh-dot"></span>
+
+            <div>
+
+                <div class="rwh-val-row">
+
+                    <span class="rwh-val" id="rwh-val">--</span>
+
+                    <span class="rwh-desc" id="rwh-desc"></span>
+
                 </div>
+
+                <div class="rwh-meta" id="rwh-meta">--</div>
+
             </div>
-            <div class="rwh-right">
-                <div class="rwh-tabs">
-                    <button class="rwh-tab active" onclick="rwhSetTab('jam',this)">per jam</button>
-                    <button class="rwh-tab"        onclick="rwhSetTab('hari',this)">per hari</button>
-                    <button class="rwh-tab"        onclick="rwhSetTab('bulan',this)">bulanan</button>
-                </div>
-                <select class="rwh-select" id="rwh-metric" onchange="rwhRender()">
-                    <option value="aqhi">AQHI</option>
-                    <option value="aqi">AQI</option>
-                    <option value="pm25">PM2.5</option>
-                    <option value="no2">NO₂</option>
-                    <option value="o3">O₃</option>
-                    <option value="pm10">PM10</option>
-                    <option value="polutan">polutan / VOC</option>
-                    <option value="temp">Suhu</option>
-                    <option value="humidity">Kelembapan</option>
-                </select>
-            </div>
+
         </div>
 
-        <div class="mini-chart-card">
-            <div class="rwh-canvas-wrap">
-                <canvas id="rwhChart" role="img" aria-label="Bar chart riwayat kualitas udara">Data riwayat kualitas udara.</canvas>
+        <div class="rwh-right">
+
+            <div class="rwh-tabs">
+
+                <button class="rwh-tab active"
+                        onclick="rwhSetTab('jam',this)">
+                    per jam
+                </button>
+
+                <button class="rwh-tab"
+                        onclick="rwhSetTab('hari',this)">
+                    per hari
+                </button>
+
+                <button class="rwh-tab"
+                        onclick="rwhSetTab('bulan',this)">
+                    bulanan
+                </button>
+
             </div>
+
+            <select class="rwh-select"
+                    id="rwh-metric"
+                    onchange="rwhRender()">
+
+                <option value="aqhi">AQHI</option>
+                <option value="aqi">AQI</option>
+                <option value="pm25">PM2.5</option>
+                <option value="no2">NO₂</option>
+                <option value="o3">O₃</option>
+                <option value="pm10">PM10</option>
+                <option value="polutan">polutan / VOC</option>
+                <option value="temp">Suhu</option>
+                <option value="humidity">Kelembapan</option>
+
+            </select>
+
         </div>
+
+    </div>
+
+    <div class="mini-chart-card">
+
+        <div class="rwh-canvas-wrap">
+
+            <canvas id="rwhChart"></canvas>
+
+        </div>
+
     </div>
 
 </div>
@@ -154,8 +364,9 @@ const RWH_DESC = {
 
 const RWH_TAB_LABEL = { jam:'per jam', hari:'per hari', bulan:'bulanan' };
 
-let rwhTab   = 'jam';
-let rwhChart = null;
+let rwhTab        = 'jam';
+let rwhChart      = null;
+let currentChartType = 'bar';
 
 function rwhGetDataset(tabKey, metricKey) {
     const raw = tabKey === 'jam'  ? window.DASH.hourlyRaw
@@ -197,17 +408,75 @@ function rwhRender() {
 
     rwhUpdateInfo(labels[labels.length - 1], values[values.length - 1], metric);
 
-    if (rwhChart) rwhChart.destroy();
+    if (rwhChart) {
+    rwhChart.destroy();
+    rwhChart = null;
+}
 
-    rwhChart = new Chart(document.getElementById('rwhChart'), {
-        type: 'bar',
+    const ctx = document
+    .getElementById('rwhChart')
+    .getContext('2d');
+
+rwhChart = new Chart(ctx, {
+        type: currentChartType,
         data: {
             labels,
             datasets: [{
+
                 data: values,
-                backgroundColor: values.map(v => RWH_COLOR[metric](v)),
-                borderRadius: 4,
+
+                backgroundColor:
+                    currentChartType === 'bar'
+                    ? values.map(v => RWH_COLOR[metric](v))
+                    : (() => {
+
+                        const gradient =
+                            ctx.createLinearGradient(0, 0, 0, 260);
+
+                        gradient.addColorStop(
+                            0,
+                            'rgba(16,185,129,0.25)'
+                        );
+
+                        gradient.addColorStop(
+                            1,
+                            'rgba(16,185,129,0.02)'
+                        );
+
+                        return gradient;
+                    })(),
+
+                borderColor: '#10b981',
+
+                borderWidth:
+                    currentChartType === 'line'
+                    ? 3
+                    : 0,
+
+                tension: 0.4,
+
+                fill:
+                    currentChartType === 'line',
+
+                pointRadius:
+                    currentChartType === 'line'
+                    ? 4
+                    : 0,
+
+                pointHoverRadius:
+                    currentChartType === 'line'
+                    ? 6
+                    : 0,
+
+                pointBackgroundColor: '#10b981',
+
+                borderRadius:
+                    currentChartType === 'bar'
+                    ? 4
+                    : 0,
+
                 borderSkipped: false,
+
             }]
         },
         options: {
@@ -238,6 +507,22 @@ function rwhSetTab(tabKey, btnEl) {
     rwhTab = tabKey;
     document.querySelectorAll('.rwh-tab').forEach(b => b.classList.remove('active'));
     btnEl.classList.add('active');
+    rwhRender();
+}
+
+// ============================================================
+// TOGGLE BAR / LINE
+// ============================================================
+
+function setChartType(type, btnEl)
+{
+    currentChartType = type;
+
+    document.querySelectorAll('.graph-btn')
+        .forEach(btn => btn.classList.remove('active'));
+
+    btnEl.classList.add('active');
+
     rwhRender();
 }
 
@@ -287,7 +572,7 @@ function onTimelineClick(clickedEl, item, color) {
     const jam = item.time || item.jam || '--';
     const rwhVal  = document.getElementById('rwh-val');
     const rwhMeta = document.getElementById('rwh-meta');
-    if (rwhVal)  rwhVal.textContent  = aqhi + ' AQHI';
+    if (rwhVal)  rwhVal.textContent  = item.aqhi + ' AQHI';
     if (rwhMeta) rwhMeta.textContent = jam + ' · forecast';
 }
 
@@ -422,4 +707,251 @@ function exportToExcel() {
 
     XLSX.writeFile(wb, fileName);
 }
+
+// ============================================================
+// HISTORICAL DATA TOGGLE
+// ============================================================
+
+let hdView = 'jam';
+let hdEntries = 10;
+
+function hdSetView(view, btnEl) {
+    hdView = view;
+    document.querySelectorAll('.hd-tab').forEach(b => b.classList.remove('active'));
+    btnEl.classList.add('active');
+
+    const thPrimary = document.getElementById('th-primary');
+    if (thPrimary) thPrimary.textContent = view === 'jam' ? 'TIME ▼' : 'DATE ▼';
+
+    document.querySelectorAll('#hd-tbody tr').forEach(row => {
+        row.style.display = row.dataset.view === view ? '' : 'none';
+    });
+
+    document.getElementById('hd-search').value = '';
+    document.getElementById('hd-clear').style.display = 'none';
+    document.getElementById('hd-empty').style.display = 'none';
+    hdApplyEntries();
+}
+
+function hdFilter() {
+    const kw = document.getElementById('hd-search').value.toLowerCase().trim();
+    document.getElementById('hd-clear').style.display = kw ? 'block' : 'none';
+    let visible = 0;
+    document.querySelectorAll('#hd-tbody tr').forEach(row => {
+        if (row.dataset.view !== hdView) return;
+        const match =
+            row.textContent
+                .toLowerCase()
+                .includes(kw);
+
+        row.dataset.filtered =
+            match ? 'false' : 'true';
+
+        if (match) visible++;
+    });
+
+    hdApplyEntries();
+
+    const emptyEl = document.getElementById('hd-empty');
+    emptyEl.style.display = visible === 0 ? 'flex' : 'none';
+    document.getElementById('hd-empty-kw').textContent = kw;
+    hdUpdateCount(visible);
+}
+
+function hdClear() {
+    document.getElementById('hd-search').value = '';
+    document.getElementById('hd-clear').style.display = 'none';
+    document.getElementById('hd-empty').style.display = 'none';
+    document.querySelectorAll('#hd-tbody tr[data-view="' + hdView + '"]').forEach(r => r.style.display = '');
+    hdApplyEntries();
+}
+
+function hdUpdateCount(count) {
+    const n = count !== undefined ? count :
+        Array.from(document.querySelectorAll('#hd-tbody tr[data-view="' + hdView + '"]'))
+            .filter(r => r.style.display !== 'none').length;
+    document.getElementById('hd-count').textContent = n + ' data';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    hdSetView('jam', document.getElementById('btn-jam'));
+});
+
+// ============================================================
+// SHOW ENTRIES
+// ============================================================
+
+function hdChangeEntries()
+{
+    hdEntries = parseInt(
+        document.getElementById('hd-entries-select').value
+    );
+
+    hdApplyEntries();
+}
+
+function hdApplyEntries()
+{
+    const rows = Array.from(
+        document.querySelectorAll(
+            '#hd-tbody tr[data-view="' + hdView + '"]'
+        )
+    );
+
+    let visibleIndex = 0;
+
+    rows.forEach(row => {
+
+        // skip hidden hasil filter
+        if (
+            row.dataset.filtered === 'true'
+        ) {
+            row.style.display = 'none';
+            return;
+        }
+
+        if (visibleIndex < hdEntries) {
+
+            row.style.display = '';
+
+        } else {
+
+            row.style.display = 'none';
+        }
+
+        visibleIndex++;
+    });
+
+    const totalRows = rows.filter(
+        r => r.dataset.filtered !== 'true'
+    ).length;
+
+    const showingTo =
+        Math.min(totalRows, hdEntries);
+
+    document.getElementById(
+        'hd-footer-info'
+    ).textContent =
+        `Showing 1 to ${showingTo} of ${totalRows} entries`;
+
+    hdUpdateCount(
+        Math.min(visibleIndex, hdEntries)
+    );
+}
+
+// ============================================================
+// HD EXPORT: copy / csv / excel / pdf / print
+// ============================================================
+function hdGetVisibleRows() {
+    return Array.from(
+        document.querySelectorAll(`#hd-tbody tr[data-view="${hdView}"]`)
+    ).filter(r => r.style.display !== 'none');
+}
+
+function hdGetHeaders() {
+    return Array.from(document.querySelectorAll('.hd-tbl thead th'))
+        .map(th => th.innerText.trim());
+}
+
+function hdRowToArray(tr) {
+    return Array.from(tr.querySelectorAll('td')).map(td => td.innerText.trim());
+}
+
+function hdExport(type) {
+    const headers = hdGetHeaders();
+    const rows    = hdGetVisibleRows().map(hdRowToArray);
+
+    if (type === 'copy') {
+        const text = [headers, ...rows].map(r => r.join('\t')).join('\n');
+        navigator.clipboard.writeText(text).then(() => {
+            // toast feedback
+            const btn = document.querySelector('.hd-btn-copy');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            btn.style.color = '#10b981';
+            setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1500);
+        });
+        return;
+    }
+
+    if (type === 'csv') {
+        const escape = v => `"${String(v).replace(/"/g,'""')}"`;
+        const csv    = [headers, ...rows].map(r => r.map(escape).join(',')).join('\n');
+        const blob   = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url    = URL.createObjectURL(blob);
+        const a      = Object.assign(document.createElement('a'), { href: url, download: `riwayat-udara-${_hdDateStr()}.csv` });
+        a.click(); URL.revokeObjectURL(url);
+        return;
+    }
+
+    if (type === 'excel') {
+        // pakai fungsi exportToExcel() yang sudah ada
+        exportToExcel();
+        return;
+    }
+
+    if (type === 'pdf') {
+        // Requires jsPDF — load dynamically jika belum ada
+        const load = cb => {
+            if (window.jspdf) { cb(); return; }
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            s.onload = () => {
+                const s2 = document.createElement('script');
+                s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js';
+                s2.onload = cb;
+                document.head.appendChild(s2);
+            };
+            document.head.appendChild(s);
+        };
+
+        load(() => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+            doc.setFontSize(12);
+            doc.text('Air Quality Historical Data', 40, 36);
+            doc.autoTable({
+                head: [headers],
+                body: rows,
+                startY: 50,
+                styles: { fontSize: 7, cellPadding: 3 },
+                headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [245, 250, 247] },
+            });
+            doc.save(`riwayat-udara-${_hdDateStr()}.pdf`);
+        });
+        return;
+    }
+
+    if (type === 'print') {
+        const html = `
+            <html><head><title>Air Quality Data</title>
+            <style>
+                body { font-family: sans-serif; font-size: 11px; }
+                table { border-collapse: collapse; width: 100%; }
+                th { background: #10b981; color: #fff; padding: 6px 8px; text-align: left; }
+                td { padding: 5px 8px; border-bottom: 1px solid #e2e8f0; }
+                tr:nth-child(even) td { background: #f8fafc; }
+            </style></head><body>
+            <h3 style="margin-bottom:12px">Air Quality Historical Data</h3>
+            <table>
+                <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+            </body></html>`;
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        w.print();
+        return;
+    }
+}
+
+function _hdDateStr() {
+    const d = new Date();
+    return String(d.getDate()).padStart(2,'0') + '-' +
+           String(d.getMonth()+1).padStart(2,'0') + '-' +
+           d.getFullYear();
+}
 </script>
+

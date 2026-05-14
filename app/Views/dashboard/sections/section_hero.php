@@ -5,7 +5,7 @@
     <div class="dash-left">
 
         <!-- HERO CARD -->
-        <div class="hero-card">
+        <div class="hero-card" id="hero-card">
             <div class="hero-badge-row">
                 <span class="hero-status" id="hero-status-badge">--</span>
                 <div class="hero-badge-right">
@@ -290,6 +290,32 @@ function renderDashboard() {
     const aqhi      = calcAqhi(no2, o3, pm25);
     const aqhiColor = getAqhiColor(aqhi);
     const aqhiLabel = getAqhiLabel(aqhi);
+
+    // =====================================
+// HERO CARD COLOR
+// =====================================
+
+const heroCard = document.getElementById('hero-card');
+
+heroCard.classList.remove(
+    'hero-low',
+    'hero-moderate',
+    'hero-high',
+    'hero-very-high'
+);
+
+if (aqhi <= 3) {
+    heroCard.classList.add('hero-low');
+}
+else if (aqhi <= 6) {
+    heroCard.classList.add('hero-moderate');
+}
+else if (aqhi <= 10) {
+    heroCard.classList.add('hero-high');
+}
+else {
+    heroCard.classList.add('hero-very-high');
+}
 
     // AQI tetap dipakai untuk gauge
     const aqiColor = getAqiColor(aqi);
