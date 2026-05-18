@@ -42,6 +42,7 @@ class Api extends BaseController
             $pm10 = isset($data['pm10']) ? (int)$data['pm10'] : 0;
             $pollutant = isset($data['pollutant']) ? (float)$data['pollutant'] : 0;
             $ozone = isset($data['ozone']) ? (float)$data['ozone'] : 0;
+            $no2 = isset($data['no2']) ? (float)$data['no2'] : 0;
             
             // Validate
             if ($temperature === null || $humidity === null) {
@@ -65,6 +66,7 @@ class Api extends BaseController
                 'pm10' => $pm10,
                 'pollutant' => $pollutant,
                 'ozone' => $ozone,
+                'no2' => $no2,
                 'timestamp' => date('Y-m-d H:i:s')
             ];
             

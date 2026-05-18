@@ -21,7 +21,8 @@ class DataUdaraModel extends Model
         'pm2_5', 
         'pm10', 
         'pollutant',
-        'ozone'
+        'ozone',
+        'no2'
     ];
     
     // PERBAIKAN: Gunakan timestamps
@@ -38,7 +39,8 @@ class DataUdaraModel extends Model
         'pm2_5' => 'permit_empty|integer',
         'pm10' => 'permit_empty|integer',
         'pollutant' => 'permit_empty|numeric',
-        'ozone' => 'permit_empty|numeric'
+        'ozone' => 'permit_empty|numeric',
+        'no2' => 'permit_empty|numeric'
     ];
     
     protected $skipValidation = false;
@@ -62,6 +64,7 @@ class DataUdaraModel extends Model
         if (!isset($filteredData['pm10'])) $filteredData['pm10'] = 0;
         if (!isset($filteredData['pollutant'])) $filteredData['pollutant'] = 0;
         if (!isset($filteredData['ozone'])) $filteredData['ozone'] = 0;
+        if (!isset($filteredData['no2'])) $filteredData['no2'] = 0;
         
         // Insert ke database
         return $this->insert($filteredData);
