@@ -184,12 +184,23 @@
 .hs-seg             { flex: 1; height: 100%; }
 .hs-seg:first-child { border-radius: 10px 0 0 10px; }
 .hs-seg:last-child  { border-radius: 0 10px 10px 0; }
-.hs-good      { background: #22c55e; }
-.hs-moderate  { background: #a3e635; }
-.hs-sensitive { background: #facc15; }
-.hs-unhealthy { background: #f97316; }
-.hs-very      { background: #ef4444; }
-.hs-hazard    { background: #7f1d1d; }
+.hs-good,
+.hs-moderate {
+    background: #22c55e;
+}
+
+.hs-sensitive,
+.hs-unhealthy {
+    background: #f59e0b;
+}
+
+.hs-very {
+    background: #ef4444;
+}
+
+.hs-hazard {
+    background: #991b1b;
+}
 
 .hero-scale-needle {
     position: absolute;
