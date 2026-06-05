@@ -1,187 +1,318 @@
-<!-- ===================== SECTION 3: INFORMASI AQI ===================== -->
+<!-- ===================== SECTION: AQI & AQHI GUIDE ===================== -->
+
 <div class="mb-3"></div>
-<div class="aqi-header">
-    <h2>Panduan Indikator AQI Indoor</h2>
-    <p>Standar penilaian kualitas udara dalam ruangan. Klik untuk melihat detail & panduan.</p>
+
+<!-- PAGE HEADER -->
+<div class="guide-page-header">
+  <div class="guide-header-left">
+    <div class="guide-page-label">Air Quality Guide</div>
+    <h2 class="guide-page-title">AQI &amp; AQHI Reference</h2>
+    <p class="guide-page-sub">Klik kartu untuk melihat detail, do's &amp; don'ts.</p>
+  </div>
 </div>
 
-<div class="aqi-grid">
+<!-- ══ AQHI SECTION ══ -->
+<div class="guide-section-wrap">
+  <div class="guide-section-header">
+    <div class="guide-section-header-left">
+      <div class="guide-section-icon aqhi-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+      <div>
+        <div class="guide-section-title">AQHI Guide</div>
+        <div class="guide-section-desc">Air Quality Health Index — 4 tingkat risiko kesehatan</div>
+      </div>
+    </div>
+    <span class="guide-section-tag aqhi-tag">4 Indeks</span>
+  </div>
 
-    <div class="aqi-card" onclick="openAqiPopup('good')">
-        <div class="aqi-bar good"></div>
-        <div class="aqi-content">
-            <h4>GOOD</h4>
-            <p>Udara bersih dan sehat untuk semua kelompok termasuk penderita asma.</p>
-            <span class="aqi-badge badge-good">0 – 50</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
+  <div class="guide-cards-grid guide-cols-4">
+
+    <div class="guide-card guide-aqhi-low" onclick="openGuidePopup('aqhi-low')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">1 – 3</div>
+      <div class="guide-card-title">Low</div>
+      <div class="guide-card-desc">Aktivitas luar ruangan aman untuk semua orang.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
     </div>
 
-    <div class="aqi-card" onclick="openAqiPopup('moderate')">
-        <div class="aqi-bar moderate"></div>
-        <div class="aqi-content">
-            <h4>MODERATE</h4>
-            <p>Kualitas udara dapat diterima, namun dapat mempengaruhi penderita asma sensitif.</p>
-            <span class="aqi-badge badge-moderate">51 – 100</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
+    <div class="guide-card guide-aqhi-mod" onclick="openGuidePopup('aqhi-moderate')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">4 – 6</div>
+      <div class="guide-card-title">Moderate</div>
+      <div class="guide-card-desc">Kelompok sensitif sebaiknya membatasi aktivitas berat.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
     </div>
 
-    <div class="aqi-card" onclick="openAqiPopup('sensitive')">
-        <div class="aqi-bar sensitive"></div>
-        <div class="aqi-content">
-            <h4>SENSITIVE GROUPS</h4>
-            <p>Berisiko bagi penderita asma, lansia, dan anak-anak di dalam ruangan.</p>
-            <span class="aqi-badge badge-sensitive">101 – 150</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
+    <div class="guide-card guide-aqhi-high" onclick="openGuidePopup('aqhi-high')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">7 – 10</div>
+      <div class="guide-card-title">High</div>
+      <div class="guide-card-desc">Batasi aktivitas luar, terutama bagi penderita asma dan lansia.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
     </div>
 
-    <div class="aqi-card" onclick="openAqiPopup('unhealthy')">
-        <div class="aqi-bar unhealthy"></div>
-        <div class="aqi-content">
-            <h4>UNHEALTHY</h4>
-            <p>Masyarakat umum mulai merasakan dampak kesehatan di dalam ruangan.</p>
-            <span class="aqi-badge badge-unhealthy">151 – 200</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
+    <div class="guide-card guide-aqhi-vhigh" onclick="openGuidePopup('aqhi-very-high')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">10+</div>
+      <div class="guide-card-title">Very High</div>
+      <div class="guide-card-desc">Hindari semua aktivitas luar ruangan, kondisi berbahaya.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
     </div>
 
-    <div class="aqi-card" onclick="openAqiPopup('very-unhealthy')">
-        <div class="aqi-bar very-unhealthy"></div>
-        <div class="aqi-content">
-            <h4>VERY UNHEALTHY</h4>
-            <p>Peringatan kesehatan darurat, semua orang berisiko di dalam ruangan.</p>
-            <span class="aqi-badge badge-very-unhealthy">201 – 300</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
-    </div>
-
-    <div class="aqi-card" onclick="openAqiPopup('hazardous')">
-        <div class="aqi-bar hazardous"></div>
-        <div class="aqi-content">
-            <h4>HAZARDOUS</h4>
-            <p>Kondisi udara sangat berbahaya, segera tinggalkan atau bersihkan ruangan.</p>
-            <span class="aqi-badge badge-hazardous">301 – 500</span>
-            <div class="aqi-hint"><i class="fa-solid fa-circle-info"></i> Klik untuk detail</div>
-        </div>
-    </div>
-
+  </div>
 </div>
 
-<!-- AQI INFO POPUP OVERLAY -->
-<div class="aqi-overlay" id="aqiOverlay" onclick="closeOnAqiOverlay(event)">
-    <div class="aqi-popup" id="aqiPopup">
-        <div class="popup-head">
-            <div class="popup-head-left">
-                <div class="popup-dot" id="popupDot"></div>
-                <div>
-                    <div class="popup-title" id="popupTitle"></div>
-                    <div class="popup-range" id="popupRange"></div>
-                </div>
-            </div>
-            <button class="aqi-popup-close" onclick="closeAqiPopup()">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <div class="popup-body">
-            <p class="popup-desc" id="popupDesc"></p>
-            <span class="popup-pm" id="popupPm"></span>
-            <div class="dd-grid">
-                <div class="dd-box dd-do">
-                    <div class="dd-title"><i class="fa-solid fa-circle-check"></i> DO'S</div>
-                    <div id="doList"></div>
-                </div>
-                <div class="dd-box dd-dont">
-                    <div class="dd-title"><i class="fa-solid fa-circle-xmark"></i> DON'TS</div>
-                    <div id="dontList"></div>
-                </div>
-            </div>
-        </div>
+<!-- ══ AQI SECTION ══ -->
+<div class="guide-section-wrap">
+  <div class="guide-section-header">
+    <div class="guide-section-header-left">
+      <div class="guide-section-icon aqi-icon"><i class="fa-solid fa-wind"></i></div>
+      <div>
+        <div class="guide-section-title">AQI Guide</div>
+        <div class="guide-section-desc">Air Quality Index — 6 tingkat kualitas udara indoor</div>
+      </div>
     </div>
+    <span class="guide-section-tag aqi-tag">6 Indeks</span>
+  </div>
+
+  <div class="guide-cards-grid guide-cols-6">
+
+    <div class="guide-card guide-aqi-good" onclick="openGuidePopup('aqi-good')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">0 – 50</div>
+      <div class="guide-card-title">Good</div>
+      <div class="guide-card-desc">Udara bersih, aman untuk semua aktivitas.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+    <div class="guide-card guide-aqi-mod" onclick="openGuidePopup('aqi-moderate')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">51 – 100</div>
+      <div class="guide-card-title">Moderate</div>
+      <div class="guide-card-desc">Masih dapat diterima, sensitif perlu waspada.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+    <div class="guide-card guide-aqi-sens" onclick="openGuidePopup('aqi-sensitive')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">101 – 150</div>
+      <div class="guide-card-title">Sensitive Groups</div>
+      <div class="guide-card-desc">Kelompok rentan sebaiknya membatasi aktivitas.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+    <div class="guide-card guide-aqi-unhlth" onclick="openGuidePopup('aqi-unhealthy')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">151 – 200</div>
+      <div class="guide-card-title">Unhealthy</div>
+      <div class="guide-card-desc">Risiko meningkat untuk semua orang di ruangan.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+    <div class="guide-card guide-aqi-vunhlth" onclick="openGuidePopup('aqi-very-unhealthy')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">201 – 300</div>
+      <div class="guide-card-title">Very Unhealthy</div>
+      <div class="guide-card-desc">Peringatan kesehatan darurat, semua orang berisiko.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+    <div class="guide-card guide-aqi-haz" onclick="openGuidePopup('aqi-hazardous')">
+      <div class="guide-card-stripe"></div>
+      <div class="guide-card-range">301 – 500</div>
+      <div class="guide-card-title">Hazardous</div>
+      <div class="guide-card-desc">Kondisi kritis, segera tinggalkan ruangan.</div>
+      <div class="guide-card-hint"><i class="fa-solid fa-circle-info"></i> Lihat detail</div>
+    </div>
+
+  </div>
 </div>
 
-<script>
-const aqiData = {
-    good: {
-        title:'Good — Udara Baik', range:'AQI 0–50 · PM2.5 < 12 µg/m³',
-        color:'#22c55e', bg:'#dcfce7',
-        desc:'Kualitas udara dalam ruangan sangat baik. Tidak ada risiko kesehatan bagi siapapun termasuk penderita asma, lansia, dan anak-anak.',
-        pm:'PM2.5 < 12 µg/m³', pmBg:'#dcfce7', pmColor:'#15803d',
-        dos:['Lakukan aktivitas normal di dalam ruangan','Biarkan ventilasi alami terbuka','Matikan air purifier untuk hemat energi','Catat kondisi ini sebagai baseline sensor'],
-        donts:['Jangan abaikan pemeliharaan ventilasi rutin','Jangan biarkan sumber polutan baru masuk','Jangan memasak tanpa exhaust fan aktif']
-    },
-    moderate: {
-        title:'Moderate — Udara Sedang', range:'AQI 51–100 · PM2.5 12–35 µg/m³',
-        color:'#eab308', bg:'#fef9c3',
-        desc:'Kualitas udara cukup dapat diterima namun mulai menurun. Penderita asma yang sangat sensitif mungkin mengalami gejala ringan.',
-        pm:'PM2.5 12–35 µg/m³', pmBg:'#fef9c3', pmColor:'#a16207',
-        dos:['Nyalakan air purifier di mode rendah','Buka jendela bila udara luar lebih baik','Periksa filter AC dan bersihkan jika kotor','Batasi aktivitas memasak yang menghasilkan asap'],
-        donts:['Jangan bakar dupa atau lilin aromaterapi','Jangan semprotkan pengharum ruangan aerosol','Jangan biarkan penderita asma beraktivitas berat']
-    },
-    sensitive: {
-        title:'Sensitive Groups — Tidak Sehat (Sensitif)', range:'AQI 101–150 · PM2.5 35–55 µg/m³',
-        color:'#f97316', bg:'#ffedd5',
-        desc:'Udara berbahaya bagi kelompok sensitif. Penderita asma berisiko mengalami gangguan pernapasan.',
-        pm:'PM2.5 35–55 µg/m³', pmBg:'#ffedd5', pmColor:'#c2410c',
-        dos:['Nyalakan air purifier di mode tinggi','Segera cari sumber polutan','Anjurkan penderita asma siapkan inhaler','Tingkatkan ventilasi'],
-        donts:['Jangan izinkan penderita asma beraktivitas fisik','Jangan memasak dengan bahan yang berasap','Jangan biarkan anak-anak dan lansia di ruangan lama']
-    },
-    unhealthy: {
-        title:'Unhealthy — Tidak Sehat', range:'AQI 151–200 · PM2.5 55–150 µg/m³',
-        color:'#ef4444', bg:'#fee2e2',
-        desc:'Seluruh penghuni ruangan mulai berisiko terkena dampak kesehatan. Tindakan perbaikan harus segera dilakukan.',
-        pm:'PM2.5 55–150 µg/m³', pmBg:'#fee2e2', pmColor:'#b91c1c',
-        dos:['Evakuasi penderita asma ke ruangan lain','Nyalakan semua air purifier ke mode maksimal','Hubungi teknisi untuk cek sistem ventilasi','Gunakan masker N95'],
-        donts:['Jangan tinggalkan penderita asma tanpa pengawasan','Jangan matikan air purifier','Jangan tunda perbaikan sumber masalah']
-    },
-    'very-unhealthy': {
-        title:'Very Unhealthy — Sangat Tidak Sehat', range:'AQI 201–300 · PM2.5 150–250 µg/m³',
-        color:'#a855f7', bg:'#f3e8ff',
-        desc:'Kondisi darurat kesehatan di dalam ruangan. Semua orang berisiko mengalami efek serius.',
-        pm:'PM2.5 150–250 µg/m³', pmBg:'#f3e8ff', pmColor:'#7e22ce',
-        dos:['Segera evakuasi semua penghuni','Hubungi pihak terkait jika dicurigai kebocoran','Gunakan masker N95/respirator','Matikan semua sumber api'],
-        donts:['Jangan tunda evakuasi','Jangan abaikan tanda-tanda sumber bahaya','Jangan masuk kembali sebelum udara diperbaiki']
-    },
-    hazardous: {
-        title:'Hazardous — Berbahaya', range:'AQI 301–500 · PM2.5 > 250 µg/m³',
-        color:'#7f1d1d', bg:'#fecaca',
-        desc:'Kondisi udara sangat kritis dan mengancam jiwa. Semua orang harus segera keluar.',
-        pm:'PM2.5 > 250 µg/m³', pmBg:'#fecaca', pmColor:'#7f1d1d',
-        dos:['Evakuasi segera seluruh penghuni','Hubungi 119 jika ada indikasi kebakaran','Tutup pintu dan jendela untuk isolasi','Gunakan jalur evakuasi yang aman'],
-        donts:['Jangan masuk kembali dalam kondisi apapun','Jangan coba atasi sendiri tanpa alat proteksi','Jangan gunakan lift — gunakan tangga darurat']
-    }
-};
-
-function openAqiPopup(key) {
-    const d = aqiData[key];
-    document.getElementById('popupTitle').textContent = d.title;
-    document.getElementById('popupRange').textContent = d.range;
-
-    const dot = document.getElementById('popupDot');
-    dot.style.background = d.bg;
-    dot.innerHTML = `<div style="width:16px;height:16px;border-radius:5px;background:${d.color}"></div>`;
-
-    document.getElementById('popupDesc').textContent = d.desc;
-
-    const pm = document.getElementById('popupPm');
-    pm.textContent      = d.pm;
-    pm.style.background = d.pmBg;
-    pm.style.color      = d.pmColor;
-
-    document.getElementById('doList').innerHTML   = d.dos.map(t   => `<div class="dd-item"><span class="dd-bullet bullet-do"></span><span>${t}</span></div>`).join('');
-    document.getElementById('dontList').innerHTML = d.donts.map(t => `<div class="dd-item"><span class="dd-bullet bullet-dont"></span><span>${t}</span></div>`).join('');
-
-    document.getElementById('aqiOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
+<style>
+/* ── GUIDE SECTION STYLES ── */
+.guide-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
 }
-
-function closeAqiPopup() {
-    document.getElementById('aqiOverlay').classList.remove('active');
-    document.body.style.overflow = '';
+.guide-page-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #9aa3bb;
+  margin-bottom: 4px;
 }
-
-function closeOnAqiOverlay(e) {
-    if (e.target === document.getElementById('aqiOverlay')) closeAqiPopup();
+.guide-page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f1624;
+  line-height: 1.15;
+  margin: 0;
 }
-</script>
+.guide-page-sub {
+  font-size: 12.5px;
+  color: #9aa3bb;
+  margin-top: 3px;
+}
+.guide-src-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid #e2e6ef;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a6480;
+  background: #ffffff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.guide-src-badge i { font-size: 10px; color: #9aa3bb; }
+
+/* section wrapper */
+.guide-section-wrap {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #e2e6ef;
+  box-shadow: 0 1px 3px rgba(15,22,36,.06);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.guide-section-header {
+  padding: 18px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.guide-section-header-left { display: flex; align-items: center; gap: 10px; }
+.guide-section-icon {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.guide-section-icon.aqhi-icon { background: #fef2f2; color: #dc2626; }
+.guide-section-icon.aqi-icon  { background: #f0fdf4; color: #16a34a; }
+.guide-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f1624;
+}
+.guide-section-desc {
+  font-size: 12px;
+  color: #9aa3bb;
+  margin-top: 1px;
+}
+.guide-section-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.guide-section-tag.aqhi-tag { background: #fef2f2; color: #b91c1c; }
+.guide-section-tag.aqi-tag  { background: #f0fdf4; color: #15803d; }
+
+/* grid */
+.guide-cards-grid {
+  display: grid;
+  padding: 14px 16px 18px;
+  gap: 10px;
+}
+.guide-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.guide-cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+/* card base */
+.guide-card {
+  position: relative;
+  border-radius: 12px;
+  padding: 14px 13px 12px;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: transform .18s ease, box-shadow .18s ease;
+  overflow: hidden;
+}
+.guide-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(15,22,36,.1);
+}
+.guide-card:active { transform: translateY(-1px); }
+
+.guide-card-stripe {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 12px 12px 0 0;
+}
+.guide-card-range {
+  font-family: 'DM Mono', 'Courier New', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  margin-bottom: 9px;
+  opacity: .7;
+}
+.guide-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 7px;
+}
+.guide-card-desc {
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: .8;
+}
+.guide-card-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  opacity: .45;
+}
+.guide-card-hint i { font-size: 9px; }
+
+/* ── AQHI colors ── */
+.guide-aqhi-low   { background:#f0fdf4; color:#14532d; border-color:#bbf7d0; }
+.guide-aqhi-low   .guide-card-stripe { background:#16a34a; }
+.guide-aqhi-mod   { background:#fefce8; color:#713f12; border-color:#fde68a; }
+.guide-aqhi-mod   .guide-card-stripe { background:#ca8a04; }
+.guide-aqhi-high  { background:#fff7ed; color:#7c2d12; border-color:#fed7aa; }
+.guide-aqhi-high  .guide-card-stripe { background:#ea580c; }
+.guide-aqhi-vhigh { background:#fef2f2; color:#7f1d1d; border-color:#fecaca; }
+.guide-aqhi-vhigh .guide-card-stripe { background:#dc2626; }
+
+/* ── AQI colors ── */
+.guide-aqi-good    { background:#f0fdf4; color:#14532d; border-color:#bbf7d0; }
+.guide-aqi-good    .guide-card-stripe { background:#22c55e; }
+.guide-aqi-mod     { background:#fefce8; color:#713f12; border-color:#fde68a; }
+.guide-aqi-mod     .guide-card-stripe { background:#eab308; }
+.guide-aqi-sens    { background:#fff7ed; color:#7c2d12; border-color:#fed7aa; }
+.guide-aqi-sens    .guide-card-stripe { background:#f97316; }
+.guide-aqi-unhlth  { background:#fef2f2; color:#7f1d1d; border-color:#fecaca; }
+.guide-aqi-unhlth  .guide-card-stripe { background:#ef4444; }
+.guide-aqi-vunhlth { background:#faf5ff; color:#4a1d96; border-color:#e9d5ff; }
+.guide-aqi-vunhlth .guide-card-stripe { background:#a855f7; }
+.guide-aqi-haz     { background:#fef2f2; color:#450a0a; border-color:#fca5a5; }
+.guide-aqi-haz     .guide-card-stripe { background:#7f1d1d; }
+
+/* responsive */
+@media (max-width: 768px) {
+  .guide-cols-4,
+  .guide-cols-6 { grid-template-columns: repeat(2, 1fr); }
+  .guide-page-header { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 480px) {
+  .guide-cols-4,
+  .guide-cols-6 { grid-template-columns: 1fr 1fr; }
+}
+</style>
