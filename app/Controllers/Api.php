@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\Database\Exceptions\DatabaseException;
+use DateTime;
+use DateTimeZone;
 
 class Api extends BaseController
 {
@@ -19,6 +21,16 @@ class Api extends BaseController
     public function options($any = null)
     {
         return $this->response->setStatusCode(200)->setBody('');
+    }
+
+    /**
+     * Mendapatkan timestamp dalam zona waktu GMT-7 (WIB)
+     * @return string Timestamp format Y-m-d H:i:s
+     */
+    private function getWIBTimestamp()
+    {
+        $datetime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
+        return $datetime->format('Y-m-d H:i:s');
     }
 
     public function insertData()
@@ -67,7 +79,7 @@ class Api extends BaseController
                 'pollutant' => $pollutant,
                 'ozone' => $ozone,
                 'no2' => $no2,
-                'timestamp' => date('Y-m-d H:i:s')
+                'timestamp' => $this->getWIBTimestamp()  // GMT-7 / WIB
             ];
             
             $result = $db->table('data_udara')->insert($insertData);
