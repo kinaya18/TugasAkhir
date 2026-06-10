@@ -543,20 +543,20 @@ else {
         .map(item => `<div class="health-item"><i class="fa-solid fa-circle-check"></i><span>${item}</span></div>`)
         .join('');
 
-    popupData.pm25.value = pm25;
-    popupData.pm25.status = getPm25Status(pm25);
+    // popupData.pm25.value = pm25;
+    // popupData.pm25.status = getPm25Status(pm25);
 
-    popupData.pm10.value = pm10;
-    popupData.pm10.status = getPm10Status(pm10);
+    // popupData.pm10.value = pm10;
+    // popupData.pm10.status = getPm10Status(pm10);
 
-    popupData.pm1.value = pm1;
-    popupData.pm1.status = getPm1Status(pm1);
+    // popupData.pm1.value = pm1;
+    // popupData.pm1.status = getPm1Status(pm1);
 
-    popupData.aqi.value = aqi;
-    popupData.aqi.status = getAqiLabel(aqi).toUpperCase();
+    // popupData.aqi.value = aqi;
+    // popupData.aqi.status = getAqiLabel(aqi).toUpperCase();
 
-    popupData.polutan.value = polutan;
-    popupData.polutan.status = getPolutanStatus(polutan);
+    // popupData.polutan.value = polutan;
+    // popupData.polutan.status = getPolutanStatus(polutan);
 }
 
 renderDashboard();
@@ -565,9 +565,13 @@ async function refreshRealtimeData() {
 
     try {
 
-        const response = await fetch('/latest-data');
+        console.log('Request latest data...');
+
+        const response = await fetch(BASE_URL + 'latest-data');
 
         const data = await response.json();
+
+        console.log('Realtime:', data);
 
         if (data && Object.keys(data).length > 0) {
 
@@ -581,9 +585,6 @@ async function refreshRealtimeData() {
         console.error('Realtime Error:', error);
     }
 }
-
-// cek data baru tiap 5 detik
-setInterval(refreshRealtimeData, 5000);
 
 // function polutan
 function getPolutanStatus(ppm) {
