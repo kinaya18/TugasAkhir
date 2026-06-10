@@ -24,3 +24,6 @@ $routes->get('api/latest', 'Api::getLatest');
 $routes->get('api/history/(:num)', 'Api::getHistory/$1');
 
 $routes->options('(:any)', 'Api::options');
+
+//realtime
+$routes->get('/latest-data', 'Home::latestData');

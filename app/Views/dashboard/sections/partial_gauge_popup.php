@@ -65,6 +65,8 @@ const popupData = {
 function openPopup(key) {
     const d = popupData[key];
 
+    const scaleNumbers = document.getElementById('popup-scale-numbers');
+
     // ── Re-sync nilai dari latestData ─────────────────────────────
     const ld = window.DASH && window.DASH.latestData;
     if (ld) {
@@ -77,11 +79,79 @@ function openPopup(key) {
           : 0
         ) || 0;
 
-        d.value       = rawVal;
-        d.status      = getAqiLabel(rawVal).toUpperCase();
-        d.statusClass = getAqiStatusClass(rawVal);
-        d.needlePct   = Math.min((rawVal / 510) * 100, 100);
+        d.value = rawVal;
+
+        switch(key) {
+
+            case 'pm25':
+                d.status = getPm25Status(rawVal);
+                break;
+
+            case 'pm10':
+                d.status = getPm10Status(rawVal);
+                break;
+
+            case 'pm1':
+                d.status = getPm1Status(rawVal);
+                break;
+
+            default:
+                d.status = getAqiLabel(rawVal).toUpperCase();
+        }
+
+        d.statusClass = getStatusClass(d.status);
+        d.needlePct = getNeedlePosition(d.status);
     }
+
+    switch(key) {
+
+      case 'pm25':
+          scaleNumbers.innerHTML = `
+              <span>0</span>
+              <span>12</span>
+              <span>35</span>
+              <span>55</span>
+              <span>150</span>
+              <span>250</span>
+              <span>250+</span>
+          `;
+          break;
+
+      case 'pm10':
+          scaleNumbers.innerHTML = `
+              <span>0</span>
+              <span>54</span>
+              <span>154</span>
+              <span>254</span>
+              <span>354</span>
+              <span>424</span>
+              <span>424+</span>
+          `;
+          break;
+
+      case 'pm1':
+          scaleNumbers.innerHTML = `
+              <span>0</span>
+              <span>10</span>
+              <span>25</span>
+              <span>50</span>
+              <span>100</span>
+              <span>200</span>
+              <span>200+</span>
+          `;
+          break;
+
+      default:
+          scaleNumbers.innerHTML = `
+              <span>0</span>
+              <span>50</span>
+              <span>100</span>
+              <span>150</span>
+              <span>200</span>
+              <span>300</span>
+              <span>500+</span>
+          `;
+  }
 
     // ── Render ke DOM ─────────────────────────────────────────────
     document.getElementById('popup-title').textContent     = d.title;
@@ -410,11 +480,11 @@ const guidePopupData = {
   'aqhi-low': {
     title: 'Low — Risiko Rendah',
     range: 'AQHI 1–3',
-    color: '#16a34a', dotBg: '#dcfce7', pmBg: '#dcfce7', pmColor: '#15803d',
+    color: '#2563eb', dotBg: '#eff6ff', pmBg: '#eff6ff', pmColor: '#2563eb',
     icon: '😊',
     desc: 'Kualitas udara sangat baik. Tidak ada risiko kesehatan bagi siapapun termasuk penderita asma, lansia, dan anak-anak. Semua orang dapat menikmati aktivitas luar ruangan dengan bebas.',
     pm: 'Risiko Kesehatan: Sangat Rendah',
-    scaleColors: ['#16a34a','#ca8a04','#ea580c','#dc2626'],
+    scaleColors: ['#2563eb','#ca8a04','#ea580c','#dc2626'],
     scaleLabels: ['Low','Moderate','High','Very High'],
     activeIdx: 0,
     dos: [

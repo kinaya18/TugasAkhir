@@ -84,22 +84,25 @@ function calcAqi($pm25)
 }
 
 // ======================================================
-// HITUNG AQHI
+// HITUNG AQHI (Standar Kanada)
 // ======================================================
-function calcAqhi($no2_ppb, $o3_ppb, $pm25)
+function calcAqhi($no2_ppm, $o3_ppm, $pm25)
 {
-    $no2  = (float)$no2_ppb;
-    $o3   = (float)$o3_ppb;
+    // konversi ppm -> ppb
+    $no2 = (float)$no2_ppm * 1000;
+    $o3  = (float)$o3_ppm * 1000;
+
     $pm25 = (float)$pm25;
 
-    $risk =
-        (exp(0.000537 * $no2)  - 1) +
-        (exp(0.000871 * $o3)   - 1) +
-        (exp(0.000487 * $pm25) - 1);
+    $aqhi =
+        (1000 / 10.4) *
+        (
+            (exp(0.000537 * $o3) - 1) +
+            (exp(0.000871 * $no2) - 1) +
+            (exp(0.000487 * $pm25) - 1)
+        );
 
-    $aqhi = round(($risk / 10.4) * 10 + 1);
-
-    return min(max((int)$aqhi, 1), 11);
+    return round($aqhi);
 }
 
 // ======================================================

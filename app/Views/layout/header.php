@@ -53,12 +53,91 @@
         </div>
     </div>
 
-    <!-- RIGHT (KOSONG / SIAP DIISI) -->
     <div class="topbar-right d-flex align-items-center">
-        <!-- nanti bisa isi profile / avatar di sini -->
+
+        <a href="#"
+        id="topbar-location-link"
+        target="_blank"
+        class="topbar-location">
+
+            <i class="fa-solid fa-location-dot"></i>
+
+            <span id="topbar-location">
+                Mendeteksi lokasi...
+            </span>
+
+        </a>
+
     </div>
 
 </div>
+
+<script>
+    function detectLocation() {
+
+    const locationEl = document.getElementById('topbar-location');
+
+    if (!navigator.geolocation) {
+        locationEl.textContent = 'Lokasi tidak didukung';
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        async (position) => {
+
+            try {
+
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                window.currentLat = lat;
+                window.currentLon = lon;
+
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+                );
+
+                const data = await response.json();
+
+                const addr = data.address || {};
+
+                const location = [
+                    addr.road,
+                    addr.suburb,
+                    addr.village,
+                    addr.city || addr.town,
+                ]
+                .filter(Boolean)
+                .join(', ');
+
+                console.log('Lokasi hasil OSM:', location);
+
+                locationEl.textContent = location;
+                document.getElementById('topbar-location-link').href =
+                    `https://www.google.com/maps?q=${lat},${lon}`;
+                locationEl.dataset.loaded = 'true';
+
+            } catch (err) {
+
+                console.error(err);
+
+                locationEl.textContent =
+                    'Lokasi tidak diketahui';
+            }
+        },
+
+        (error) => {
+
+            console.error(error);
+
+            locationEl.textContent =
+                'Izin lokasi ditolak';
+        }
+    );
+}
+detectLocation();
+</script>
 
 </body>
 </html>

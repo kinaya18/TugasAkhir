@@ -1,7 +1,39 @@
 /* =====================================================
-   responsive.css
+   responsive.css  — FIXED
    Semua media queries & container queries
+   Root overflow fix + semua breakpoints
    ===================================================== */
+
+/* ===== GLOBAL OVERFLOW FIX =====
+   Ini adalah root cause utama scroll horizontal.
+   Pastikan semua elemen tidak melebihi lebar viewport. */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    min-width: 0; /* Penting! Mencegah flex/grid children melar keluar */
+}
+
+/* ===== HERO SECTION HEIGHT FIX =====
+   Masalah: .dash-left stretch mengikuti tinggi .dash-right di grid,
+   menyebabkan hero-card & asthma-risk-card terlalu tinggi di semua ukuran.
+   Fix: align-items: start pada grid wrapper supaya setiap kolom
+   hanya setinggi kontennya sendiri. */
+.dashboard-wrapper {
+    align-items: start;
+}
+
+/* Hero & asthma card tidak grow mengisi ruang kosong */
+.hero-card,
+.asthma-risk-card {
+    flex-shrink: 0;
+    height: auto;
+}
 
 /* ===== CONTAINER QUERY — daily table mobile ===== */
 @container dailybox (max-width: 719px) {
@@ -93,38 +125,350 @@
     .gauge-row {
         grid-template-columns: repeat(4, 1fr);
     }
+
+    /* AQI Guide grid: 2 kolom di tablet */
+    .guide-cols-4 { grid-template-columns: repeat(2, 1fr); }
+    .guide-cols-6 { grid-template-columns: repeat(3, 1fr); }
+
+    /* History: header wrap */
+    .hd-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 16px 16px 12px;
+    }
+
+    .hd-search-wrap {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .hd-search {
+        width: 100%;
+    }
+
+    .hd-controls {
+        padding: 0 16px 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 }
 
 /* ===== SMALL TABLET ===== */
 @media (max-width: 767px) {
+    /* ── Layout umum ── */
     .dashboard-wrapper  { padding: 12px; }
-    .dash-left          { flex-direction: column; }
-    .hero-card          { border-radius: 18px; }
+
+    /* ── dash-left: kolom vertikal, tinggi sesuai konten ── */
+    .dash-left {
+        flex-direction: column;
+        align-items: stretch;   /* stretch supaya full width */
+        height: auto !important;
+    }
+
+    /* ── Hero card: jangan stretch tinggi, sesuai konten ── */
+    .hero-card {
+        border-radius: 18px;
+        flex: 0 0 auto;         /* Jangan grow/shrink berlebihan */
+        height: auto !important;
+        align-self: stretch;
+    }
+
+    /* ── Asthma risk card: compact, tinggi sesuai konten ── */
+    .asthma-risk-card {
+        flex: 0 0 auto;
+        height: auto !important;
+        min-height: unset;
+        padding: 12px 14px;
+        align-self: stretch;
+    }
+
+    /* ── Health card ── */
     .health-list        { grid-template-columns: repeat(2, 1fr); }
-    .gauge-row          { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+    /* ── Gauge row: 3 kolom ── */
+    .gauge-row          { grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .gauge-wrapper      { width: 80px; height: 80px; }
-    .popup-box          { padding: 20px 16px 18px; }
+
+    /* ── Popup fix ── */
+    .popup-overlay {
+        align-items: flex-end;      /* Muncul dari bawah di mobile */
+        padding: 0;
+    }
+    .popup-box {
+        padding: 20px 16px 24px;
+        border-radius: 24px 24px 0 0;  /* Bottom sheet style */
+        max-width: 100%;
+        width: 100%;
+    }
     .popup-big-value    { font-size: 36px; }
+
+    /* ── AQI Info Popup ── */
+    .aqi-overlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+    .aqi-popup {
+        border-radius: 16px 16px 0 0;
+        max-width: 100%;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* ── Guide popup ── */
+    .guide-cols-4 { grid-template-columns: repeat(2, 1fr); }
+    .guide-cols-6 { grid-template-columns: repeat(2, 1fr); }
+
+    /* ── History section ── */
+    .timeline-card {
+        padding: 16px 14px 14px;
+        border-radius: 12px;
+    }
+    .timeline-card-header { gap: 8px; }
+    .rwh-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .rwh-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .hd-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .hd-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+    .hd-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 14px 10px;
+        gap: 10px;
+    }
+    .hd-search-wrap {
+        width: 100%;
+        margin-left: 0;
+    }
+    .hd-search { width: 100%; }
+    .hd-title  { font-size: 18px; }
+
+    /* ── Daily table: bungkus dengan overflow-x ── */
+    .daily-tbl-wrap,
+    .hd-tbl-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Mini chart ── */
+    .rwh-canvas-wrap { height: 180px; }
+
+    /* ── Guide section ── */
+    .guide-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .guide-section-header {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px 14px 0;
+    }
+    .guide-cards-grid {
+        padding: 10px 12px 14px;
+        gap: 8px;
+    }
+
+    /* ── Pollutant row wrap ── */
+    .hero-pollutant-row {
+        flex-wrap: wrap;
+        gap: 4px 10px;
+    }
+
+    /* ── Scale bar numbers ── */
+    .popup-scale-numbers,
+    .popup-scale-labels {
+        font-size: 8px;
+    }
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 575px) {
+    /* ── Layout ── */
     .dashboard-wrapper  { padding: 10px; gap: 10px; }
     .hero-temp          { font-size: 52px; }
+
+    /* ── Pastikan dash-left tidak tinggi berlebihan ── */
+    .dash-left {
+        height: auto !important;
+        flex: 0 0 auto;
+    }
+    .hero-card,
+    .asthma-risk-card {
+        height: auto !important;
+        flex: 0 0 auto;
+    }
+    .asthma-risk-card {
+        min-height: unset;
+        padding: 11px 14px;
+    }
+
+    /* ── Health ── */
     .health-list        { grid-template-columns: 1fr; gap: 8px; }
     .health-item        { font-size: 13px; }
-    .gauge-row          { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+    /* ── Gauge: 2 kolom, last item tengah ── */
+    .gauge-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    /* Gauge ke-5 (Polutan) ditengah jika odd */
+    .gauge-row .gauge-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        margin: 0 auto;
+    }
     .gauge-card         { padding: 12px 8px; border-radius: 14px; }
     .gauge-wrapper      { width: 75px; height: 75px; }
     .gauge-value        { font-size: 13px; }
     .gauge-unit         { font-size: 9px; }
     .gauge-label        { font-size: 11px; }
+
+    /* ── AQI guide wrapper ── */
     .aqi-info-wrapper   { padding: 12px 10px 20px; }
+    .guide-section-wrap { border-radius: 12px; }
+    .guide-card         { padding: 12px 10px; border-radius: 10px; }
+    .guide-card-title   { font-size: 13px; }
+    .guide-card-desc    { font-size: 10.5px; }
+    .guide-card-range   { font-size: 10px; }
+
+    /* ── Hero climate row wrap ── */
+    .hero-climate-row { flex-wrap: wrap; gap: 8px; }
+
+    /* ── History ── */
+    .history-card-box   { padding: 12px 10px; border-radius: 12px; }
+    .daily-card-header  { padding: 0 10px; }
+    .daily-card-header h3,
+    .daily-card-header h4 { font-size: 16px; }
+    .rwh-canvas-wrap    { height: 160px; }
+    .hd-card            { padding: 14px; border-radius: 16px; }
+    .hd-inner-card      { border-radius: 12px; margin-top: 12px; }
+
+    /* ── DD grid (do/don't) 1 kolom di mobile kecil ── */
+    .dd-grid { grid-template-columns: 1fr; }
+
+    /* ── Popup ── */
+    .popup-box          { padding: 18px 14px 20px; }
+    .popup-avg-row      { flex-direction: column; gap: 8px; }
+    .avg-box            { padding: 10px 12px; }
+
+    /* ── Scale labels truncate ── */
+    .popup-scale-labels span:not(:first-child):not(:last-child) {
+        display: none;
+    }
+    .popup-scale-numbers span:not(:first-child):not(:last-child) {
+        display: none;
+    }
+
+    /* ── History chart controls ── */
+    .rwh-tabs { flex-wrap: wrap; }
 }
 
 /* ===== VERY SMALL MOBILE ===== */
 @media (max-width: 360px) {
-    .gauge-row      { gap: 6px; }
-    .gauge-wrapper  { width: 68px; height: 68px; }
-    .gauge-value    { font-size: 12px; }
+    .gauge-row          { gap: 6px; }
+    .gauge-wrapper      { width: 68px; height: 68px; }
+    .gauge-value        { font-size: 12px; }
+    .hero-temp          { font-size: 44px; }
+    .dashboard-wrapper  { padding: 8px; gap: 8px; }
+    .guide-cols-4,
+    .guide-cols-6       { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .guide-card-title   { font-size: 12px; }
+    .guide-card-desc    { display: none; } /* Sembunyikan desc di layar sangat kecil */
+    .hd-search          { font-size: 12px; padding: 8px 30px 8px 32px; }
+}
+
+/* ===== POPUP OVERLAY — universal fix =====
+   Pastikan popup tidak overflow di semua ukuran layar */
+.popup-overlay,
+.aqi-overlay {
+    /* Sudah ada di base.css / section_aqi_guide.css,
+       override untuk pastikan tidak overflow */
+    padding: 16px;
+}
+
+@media (max-width: 767px) {
+    /* Popup jadi bottom sheet */
+    .popup-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+    .popup-box {
+        border-radius: 20px 20px 0 0;
+        max-width: 100%;
+        width: 100%;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+
+    /* AQI guide popup juga bottom sheet */
+    .aqi-overlay {
+        align-items: flex-end;
+        padding: 0 0 0 0;
+        padding-top: 0;
+    }
+    .aqi-popup {
+        border-radius: 16px 16px 0 0;
+        max-width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+/* ===== SCROLLABLE TABLE WRAPPER =====
+   Tabel yang lebar tetap bisa di-scroll horizontal
+   tapi hanya di dalam containernya sendiri */
+.daily-tbl-wrap,
+.hd-tbl-wrap,
+.fc-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Scroll indicator subtle */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.daily-tbl-wrap::-webkit-scrollbar,
+.hd-tbl-wrap::-webkit-scrollbar {
+    height: 4px;
+}
+.daily-tbl-wrap::-webkit-scrollbar-thumb,
+.hd-tbl-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+/* ===== HISTORY SECTION HEADER MOBILE ===== */
+@media (max-width: 600px) {
+    .daily-tbl          { font-size: 12px; }
+    .daily-tbl td,
+    .daily-tbl th       { padding: 10px 12px; }
+    .rwh-canvas-wrap    { height: 180px; }
+    .rwh-controls       { flex-direction: column; align-items: flex-start; }
+
+    /* hd-controls wrap di bawah 600px */
+    .hd-controls {
+        padding: 0 12px 12px;
+        gap: 8px;
+    }
+    .hd-toggle { flex-wrap: wrap; }
+    .hd-export-toolbar { flex-wrap: wrap; gap: 4px; }
+
+    /* graph toggle */
+    .graph-toggle { padding: 3px; }
+    .graph-btn    { width: 34px; height: 34px; font-size: 13px; }
 }

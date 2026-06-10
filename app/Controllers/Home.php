@@ -51,7 +51,7 @@ class Home extends BaseController
                 'no2'         => (float) ($latestRaw['no2'] ?? 0),
                 'suhu'        => (float) ($latestRaw['temperature'] ?? 0),
                 'kelembaban'  => (float) ($latestRaw['humidity'] ?? 0),
-                'location'    => 'Bojongsoang',
+                'location' => 'Mendeteksi lokasi...',
                 'timestamp'   => $latestRaw['timestamp'] ?? null,
             ];
         }
@@ -99,7 +99,7 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location'   => 'Bojongsoang',
+                'location' => 'Mendeteksi lokasi...',
             ];
         }
 
@@ -148,7 +148,7 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location'   => 'Bojongsoang',
+                'location' => 'Mendeteksi lokasi...',
             ];
 
             $counter++;
@@ -195,7 +195,7 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location'   => 'Bojongsoang',
+                'location' => 'Mendeteksi lokasi...',
             ];
         }
 
@@ -266,5 +266,41 @@ class Home extends BaseController
         }
 
         return 0;
+    }
+
+    // realtime tanpa refresh
+    public function latestData()
+    {
+        helper('air');
+
+        $latestRaw = $this->dataUdaraModel
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if (!$latestRaw) {
+            return $this->response->setJSON([]);
+        }
+
+        $pm25 = (float) ($latestRaw['pm2_5'] ?? 0);
+
+        $data = [
+            'aqi' => $this->hitungAqi($pm25),
+            'aqhi' => calcAqhi(
+                (float) ($latestRaw['no2'] ?? 0),
+                (float) ($latestRaw['ozone'] ?? 0),
+                (float) ($latestRaw['pm2_5'] ?? 0)
+            ),
+            'pm25' => (float) ($latestRaw['pm2_5'] ?? 0),
+            'pm10' => (float) ($latestRaw['pm10'] ?? 0),
+            'pm1' => (float) ($latestRaw['pm1_0'] ?? 0),
+            'polutan' => (float) ($latestRaw['pollutant'] ?? 0),
+            'o3' => (float) ($latestRaw['ozone'] ?? 0),
+            'no2' => (float) ($latestRaw['no2'] ?? 0),
+            'suhu' => (float) ($latestRaw['temperature'] ?? 0),
+            'kelembaban' => (float) ($latestRaw['humidity'] ?? 0),
+            'timestamp' => $latestRaw['timestamp']
+        ];
+
+        return $this->response->setJSON($data);
     }
 }

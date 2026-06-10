@@ -335,7 +335,7 @@
 // ============================================================
 const RWH_COLOR = {
     aqi:      v => v<=50?'#22c55e':v<=100?'#eab308':v<=150?'#f97316':v<=200?'#ef4444':v<=300?'#a855f7':'#7f1d1d',
-    aqhi:     v => v<=3?'#22c55e':v<=6?'#f59e0b':v<=10?'#ef4444':'#7f1d1d',
+    aqhi:     v => v<=3?'#3b82f6':v<=6?'#eab308':v<=10?'#ef4444':'#7f1d1d',
     pm25:     v => v<=12?'#22c55e':v<=35?'#eab308':v<=55?'#f97316':v<=150?'#ef4444':'#7f1d1d',
     pm10:     v => v<=54?'#22c55e':v<=154?'#eab308':v<=254?'#f97316':v<=354?'#ef4444':'#7f1d1d',
     no2:      v => v<=40?'#22c55e':v<=100?'#eab308':v<=200?'#f97316':v<=400?'#ef4444':'#7f1d1d',
@@ -446,7 +446,10 @@ rwhChart = new Chart(ctx, {
                         return gradient;
                     })(),
 
-                borderColor: '#10b981',
+                borderColor:
+                    metric === 'aqhi'
+                    ? RWH_COLOR.aqhi(values[values.length - 1])
+                    : '#10b981',
 
                 borderWidth:
                     currentChartType === 'line'
@@ -468,7 +471,10 @@ rwhChart = new Chart(ctx, {
                     ? 6
                     : 0,
 
-                pointBackgroundColor: '#10b981',
+                pointBackgroundColor:
+                    metric === 'aqhi'
+                    ? RWH_COLOR.aqhi(values[values.length - 1])
+                    : '#10b981',
 
                 borderRadius:
                     currentChartType === 'bar'

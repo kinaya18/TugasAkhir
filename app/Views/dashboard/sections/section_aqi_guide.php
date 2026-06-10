@@ -282,14 +282,42 @@
 .guide-card-hint i { font-size: 9px; }
 
 /* ── AQHI colors ── */
-.guide-aqhi-low   { background:#f0fdf4; color:#14532d; border-color:#bbf7d0; }
-.guide-aqhi-low   .guide-card-stripe { background:#16a34a; }
-.guide-aqhi-mod   { background:#fefce8; color:#713f12; border-color:#fde68a; }
-.guide-aqhi-mod   .guide-card-stripe { background:#ca8a04; }
-.guide-aqhi-high  { background:#fff7ed; color:#7c2d12; border-color:#fed7aa; }
-.guide-aqhi-high  .guide-card-stripe { background:#ea580c; }
-.guide-aqhi-vhigh { background:#fef2f2; color:#7f1d1d; border-color:#fecaca; }
-.guide-aqhi-vhigh .guide-card-stripe { background:#dc2626; }
+
+.guide-aqhi-low {
+  background:#eff6ff;
+  color:#1e3a8a;
+  border-color:#93c5fd;
+}
+.guide-aqhi-low .guide-card-stripe {
+  background:#3b82f6;
+}
+
+.guide-aqhi-mod {
+  background:#fefce8;
+  color:#854d0e;
+  border-color:#fde047;
+}
+.guide-aqhi-mod .guide-card-stripe {
+  background:#eab308;
+}
+
+.guide-aqhi-high {
+  background:#fef2f2;
+  color:#991b1b;
+  border-color:#f87171;
+}
+.guide-aqhi-high .guide-card-stripe {
+  background:#ef4444;
+}
+
+.guide-aqhi-vhigh {
+  background:#fef2f2;
+  color:#450a0a;
+  border-color:#7f1d1d;
+}
+.guide-aqhi-vhigh .guide-card-stripe {
+  background:#7f1d1d;
+}
 
 /* ── AQI colors ── */
 .guide-aqi-good    { background:#f0fdf4; color:#14532d; border-color:#bbf7d0; }

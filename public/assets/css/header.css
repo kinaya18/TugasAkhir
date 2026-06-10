@@ -151,3 +151,37 @@
     font-weight: 500;
 }
 .notif-mark-all:hover { text-decoration: underline; }
+
+/* location */
+.topbar-location{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 14px;
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 999px;
+
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(8px);
+
+    text-decoration: none;
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: all .25s ease;
+}
+
+.topbar-location:hover{
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.35);
+    transform: translateY(-1px);
+}
+
+.topbar-location i{
+    color: #ffffff;
+    font-size: 14px;
+}
