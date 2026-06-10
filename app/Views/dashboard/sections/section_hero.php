@@ -508,7 +508,7 @@ else {
     document.getElementById('val-pm1').textContent = pm1;
     document.getElementById('val-aqi').textContent  = aqi;
 
-    createGauge('gauge-polutan',  polutan,  300, getAqiColor(polutan));
+    createGauge('gauge-polutan',polutan,2500,getPolutanColor(polutan));
     createGauge('gauge-pm25', pm25, 300, getPm25Color(pm25));
     createGauge('gauge-pm10', pm10, 300, getPm10Color(pm10));
     createGauge('gauge-pm1', pm1, 300, getPm1Color(pm1));
@@ -556,7 +556,7 @@ else {
     popupData.aqi.status = getAqiLabel(aqi).toUpperCase();
 
     popupData.polutan.value = polutan;
-    popupData.polutan.status = getAqiLabel(polutan).toUpperCase();
+    popupData.polutan.status = getPolutanStatus(polutan);
 }
 
 renderDashboard();
@@ -584,5 +584,40 @@ async function refreshRealtimeData() {
 
 // cek data baru tiap 5 detik
 setInterval(refreshRealtimeData, 5000);
+
+// function polutan
+function getPolutanStatus(ppm) {
+
+    if (ppm < 800)
+        return 'GOOD';
+
+    if (ppm <= 1200)
+        return 'ELEVATED';
+
+    if (ppm <= 1500)
+        return 'HIGH';
+
+    if (ppm <= 1999)
+        return 'VERY HIGH';
+
+    return 'DANGEROUS';
+}
+
+function getPolutanColor(ppm) {
+
+    if (ppm < 800)
+        return '#22c55e'; // hijau
+
+    if (ppm <= 1200)
+        return '#eab308'; // kuning
+
+    if (ppm <= 1500)
+        return '#f97316'; // oranye
+
+    if (ppm <= 1999)
+        return '#ef4444'; // merah
+
+    return '#7f1d1d'; // maroon
+}
 
 </script>
