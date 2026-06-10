@@ -472,24 +472,3 @@ html, body {
     .graph-toggle { padding: 3px; }
     .graph-btn    { width: 34px; height: 34px; font-size: 13px; }
 }
-
-/* ===== FIX CANVAS GAUGE DI HP ASLI ===== */
-@media screen and (max-width: 768px) {
-    .gauge-wrapper {
-        width: 75px !important;
-        height: 75px !important;
-        max-width: 75px !important;
-        max-height: 75px !important;
-    }
-
-    /* Paksa canvas tidak melebihi wrapper */
-    .gauge-wrapper canvas {
-        max-width: 75px !important;
-        max-height: 75px !important;
-    }
-
-    /* Paksa dashboard collapse jadi 1 kolom */
-    .dashboard-wrapper {
-        grid-template-columns: 1fr !important;
-    }
-}

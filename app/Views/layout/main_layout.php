@@ -57,8 +57,6 @@
         </div>
 
     </div>
-    
-    
 
     <!-- CONTENT -->
     <div class="main-content">
