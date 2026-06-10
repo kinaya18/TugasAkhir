@@ -84,7 +84,7 @@
 
             <div class="gauge-card" onclick="openPopup('aqi')">
                 <div class="gauge-wrapper">
-                    <canvas id="gauge-aqi"></canvas>
+                    <canvas id="gauge-aqi" width="90" height="90"></canvas>
                     <div class="gauge-center">
                         <span class="gauge-value" id="val-aqi">--</span>
                         <span class="gauge-unit">AQI</span>
@@ -95,7 +95,7 @@
 
             <div class="gauge-card" onclick="openPopup('pm25')">
                 <div class="gauge-wrapper">
-                    <canvas id="gauge-pm25"></canvas>
+                    <canvas id="gauge-pm25" width="90" height="90"></canvas>
                     <div class="gauge-center">
                         <span class="gauge-value" id="val-pm25">--</span>
                         <span class="gauge-unit">µg/m³</span>
@@ -106,7 +106,7 @@
 
             <div class="gauge-card" onclick="openPopup('pm10')">
                 <div class="gauge-wrapper">
-                    <canvas id="gauge-pm10"></canvas>
+                    <canvas id="gauge-pm10" width="90" height="90"></canvas>
                     <div class="gauge-center">
                         <span class="gauge-value" id="val-pm10">--</span>
                         <span class="gauge-unit">µg/m³</span>
@@ -117,7 +117,7 @@
 
             <div class="gauge-card" onclick="openPopup('pm1')">
                 <div class="gauge-wrapper">
-                    <canvas id="gauge-pm1"></canvas>
+                    <canvas id="gauge-pm1" width="90" height="90"></canvas>
                     <div class="gauge-center">
                         <span class="gauge-value" id="val-pm1">--</span>
                         <span class="gauge-unit">µg/m³</span>
@@ -128,7 +128,7 @@
 
             <div class="gauge-card" onclick="openPopup('polutan')">
                 <div class="gauge-wrapper">
-                    <canvas id="gauge-polutan"></canvas>
+                    <canvas id="gauge-polutan" width="90" height="90"></canvas>
                     <div class="gauge-center">
                         <span class="gauge-value" id="val-polutan">--</span>
                         <span class="gauge-unit">ppm</span>

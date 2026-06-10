@@ -1,5 +1,5 @@
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
 <title><?= $title ?? 'Pemantau Kualitas Udara' ?></title>
 
@@ -34,13 +34,3 @@
 
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-    const BASE_URL = "<?= base_url() ?>";
-</script>
-
-<style>
-body{
-    background:red !important;
-}
-</style>
