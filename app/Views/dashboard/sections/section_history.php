@@ -1,8 +1,3 @@
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/base.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/dashboard.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_history.css') ?>">
-
 <!-- ===================== SECTION 2: RIWAYAT ===================== -->
 <div class="history-wrapper">
 

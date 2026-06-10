@@ -1,9 +1,9 @@
 /* =====================================================
-   dashboard.css - Entry point - SEMUA CSS DASHBOARD
+   dashboard.css - Entry point
    ===================================================== */
 
-@import url('dashboard/base.css');
-@import url('dashboard/section_hero.css');
-@import url('dashboard/section_history.css');
-@import url('dashboard/section_aqi_guide.css');
-@import url('dashboard/responsive.css');
+@import url('base.css');
+@import url('section_hero.css');
+@import url('section_history.css');
+@import url('section_aqi_guide.css');
+@import url('responsive.css');

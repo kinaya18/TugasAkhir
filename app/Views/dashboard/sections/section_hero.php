@@ -1,8 +1,3 @@
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_hero.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/base.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/dashboard.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
-
 <!-- ===================== SECTION 1: DASHBOARD ===================== -->
 <div class="dashboard-wrapper">
 

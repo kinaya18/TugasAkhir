@@ -19,11 +19,10 @@ if ($aqhi > 3 && $aqhi <= 6) {
 
 <!-- ================= CSS DASHBOARD ================= -->
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/base.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/dashboard.css') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_hero.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_history.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_aqi_guide.css') ?>">
+<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
 
 <!-- ================= DATA GLOBAL ================= -->
 <script>
