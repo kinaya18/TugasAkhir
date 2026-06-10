@@ -472,3 +472,22 @@ html, body {
     .graph-toggle { padding: 3px; }
     .graph-btn    { width: 34px; height: 34px; font-size: 13px; }
 }
+
+@media (max-width: 767px){
+
+    .dashboard-wrapper{
+        display:block !important;
+    }
+
+    .dash-left,
+    .dash-right{
+        width:100% !important;
+    }
+
+    .hero-card,
+    .asthma-risk-card,
+    .health-card{
+        width:100% !important;
+    }
+
+}
