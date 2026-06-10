@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_hero.css?v=99') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_history.css?v=99') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_aqi_guide.css?v=99') ?>">
-<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css?v=99') ?>">>
+<link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css?v=99') ?>">
 
 <!-- ================= DATA GLOBAL ================= -->
 <script>

@@ -1,9 +1,5 @@
 <meta charset="UTF-8">
-<<<<<<< HEAD
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-=======
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
->>>>>>> 48dad99c0e435cae0082c1649c9c76311d154632
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title><?= $title ?? 'Pemantau Kualitas Udara' ?></title>
 
