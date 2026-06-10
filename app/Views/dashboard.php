@@ -23,6 +23,11 @@ if ($aqhi > 3 && $aqhi <= 6) {
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_history.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_aqi_guide.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
+<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/base.css') ?>">
+<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_hero.css') ?>">
+<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_history.css') ?>">
+<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_aqi_guide.css') ?>">
+<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/responsive.css') ?>">
 
 <!-- ================= DATA GLOBAL ================= -->
 <script>
