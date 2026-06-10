@@ -136,7 +136,7 @@ body {
    MAIN CONTENT
    ========================================================= */
 .main-content {
-    margin-top: 0;
+    margin-top: var(--topbar-height);
     padding: 30px;
 }
 
