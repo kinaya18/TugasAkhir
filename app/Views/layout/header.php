@@ -38,3 +38,9 @@
 <script>
     const BASE_URL = "<?= base_url() ?>";
 </script>
+
+<style>
+body{
+    background:red !important;
+}
+</style>
