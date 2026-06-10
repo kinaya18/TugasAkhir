@@ -327,6 +327,25 @@ function createGauge(id, value, max, color) {
     });
 }
 
+function updateGauge(id, value, max, color) {
+
+    const chart = gaugeInstances[id];
+
+    if (!chart) return;
+
+    chart.data.datasets[0].data = [
+        Math.min(value, max),
+        Math.max(max - value, 0)
+    ];
+
+    chart.data.datasets[0].backgroundColor = [
+        color,
+        '#e2e8f0'
+    ];
+
+    chart.update('none');
+}
+
 // ============================================================
 // HEALTH RECOMMENDATIONS (berdasarkan AQHI)
 // ============================================================
@@ -508,11 +527,11 @@ else {
     document.getElementById('val-pm1').textContent = pm1;
     document.getElementById('val-aqi').textContent  = aqi;
 
-    createGauge('gauge-polutan',polutan,2500,getPolutanColor(polutan));
-    createGauge('gauge-pm25', pm25, 300, getPm25Color(pm25));
-    createGauge('gauge-pm10', pm10, 300, getPm10Color(pm10));
-    createGauge('gauge-pm1', pm1, 300, getPm1Color(pm1));
-    createGauge('gauge-aqi',  aqi,  300, aqiColor);
+    updateGauge('gauge-polutan',polutan,2500,getPolutanColor(polutan));
+    updateGauge('gauge-pm25', pm25, 300, getPm25Color(pm25));
+    updateGauge('gauge-pm10', pm10, 300, getPm10Color(pm10));
+    updateGauge('gauge-pm1', pm1, 300, getPm1Color(pm1));
+    updateGauge('gauge-aqi',  aqi,  300, aqiColor);
 
     // ---- Asthma risk berdasarkan AQHI ----
     const risk = getAsthmaRisk(aqhi);
@@ -575,9 +594,17 @@ async function refreshRealtimeData() {
 
         if (data && Object.keys(data).length > 0) {
 
-            window.DASH.latestData = data;
+            const oldData = JSON.stringify(window.DASH.latestData);
+            const newData = JSON.stringify(data);
 
-            renderDashboard();
+            if (oldData !== newData) {
+
+                console.log('Dashboard updated');
+
+                window.DASH.latestData = data;
+
+                renderDashboard();
+            }
         }
 
     } catch (error) {
@@ -620,6 +647,12 @@ function getPolutanColor(ppm) {
 
     return '#7f1d1d'; // maroon
 }
+
+createGauge('gauge-polutan', 0, 2500, '#22c55e');
+createGauge('gauge-pm25', 0, 300, '#22c55e');
+createGauge('gauge-pm10', 0, 300, '#22c55e');
+createGauge('gauge-pm1', 0, 300, '#22c55e');
+createGauge('gauge-aqi', 0, 300, '#22c55e');
 
 // pertama kali load
 refreshRealtimeData();
