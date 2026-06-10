@@ -567,7 +567,7 @@ async function refreshRealtimeData() {
 
         console.log('Request latest data...');
 
-        const response = await fetch('<?= base_url('latest-data') ?>');
+        const response = await fetch('/latest-data');
 
         const data = await response.json();
 
