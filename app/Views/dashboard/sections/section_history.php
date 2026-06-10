@@ -1,20 +1,6 @@
 <!-- ===================== SECTION 2: RIWAYAT ===================== -->
 <div class="history-wrapper">
 
-    <!-- TIMELINE SCROLLABLE PER JAM -->
-    <div class="timeline-card">
-        <div class="timeline-card-header">
-            <div >
-                <span class="hd-eyebrow">AQHI Forecast</span>
-                <h4 class="hd-title">24-Hour Prediction</h4>
-            </div>
-            <span class="timeline-now-badge" id="timeline-now-badge">-- AQHI sekarang</span>
-        </div>
-        <div class="fc-scroll">
-            <div class="fc-timeline" id="fc-timeline"></div>
-        </div>
-    </div>
-
 <!-- DAILY TABLE -->
 <div class="history-card-box hd-card">
     <div class="hd-header">
