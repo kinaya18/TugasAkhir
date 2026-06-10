@@ -58,6 +58,10 @@
 
     </div>
 
+    <div class="alert alert-success">
+    TEST BOOTSTRAP
+    </div>
+
     <!-- CONTENT -->
     <div class="main-content">
         <?= $this->renderSection('content') ?>
