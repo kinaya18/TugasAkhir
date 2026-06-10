@@ -621,4 +621,10 @@ function getPolutanColor(ppm) {
     return '#7f1d1d'; // maroon
 }
 
+// pertama kali load
+refreshRealtimeData();
+
+// refresh tiap 5 detik
+setInterval(refreshRealtimeData, 5000);
+
 </script>
