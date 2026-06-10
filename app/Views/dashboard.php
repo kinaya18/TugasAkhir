@@ -1,21 +1,10 @@
-<?php
-
-$aqhi = $latestUdara['aqhi'] ?? 1;
-
-$aqhiClass = 'low';
-
-if ($aqhi > 3 && $aqhi <= 6) {
-    $aqhiClass = 'moderate';
-} elseif ($aqhi > 6 && $aqhi <= 10) {
-    $aqhiClass = 'high';
-} elseif ($aqhi > 10) {
-    $aqhiClass = 'very-high';
-}
-?>
-
 <?= $this->extend('layout/main_layout') ?>
 
 <?= $this->section('content') ?>
+
+<div style="background:yellow;padding:10px;">
+    BASE URL = <?= base_url() ?>
+</div>
 
 <!-- ================= CSS DASHBOARD ================= -->
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/base.css') ?>">
@@ -23,11 +12,6 @@ if ($aqhi > 3 && $aqhi <= 6) {
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_history.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/section_aqi_guide.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/css/dashboard/responsive.css') ?>">
-<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/base.css') ?>">
-<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_hero.css') ?>">
-<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_history.css') ?>">
-<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/section_aqi_guide.css') ?>">
-<link rel="stylesheet" href="<?= base_url('http://192.168.43.55:8080/assets/css/dashboard/responsive.css') ?>">
 
 <!-- ================= DATA GLOBAL ================= -->
 <script>
