@@ -1,10 +1,25 @@
-/* =====================================================
+/* ================================================================
    section_history.css
-   Dashboard section 2: timeline, daily table,
-   history chart, export button
-   ===================================================== */
+   Stylesheet untuk Section 2 – Riwayat & Grafik Kualitas Udara
 
-/* ===== HISTORY WRAPPER ===== */
+   Urutan bagian:
+     1. History Wrapper (layout utama)
+     2. Timeline Forecast 24 Jam
+     3. Tabel Historis (HD Card)
+        3a. Header & Eyebrow
+        3b. Toolbar Controls (toggle, export, search)
+        3c. Tabel & Status Pill
+        3d. Empty State
+        3e. Footer & Pagination
+     4. Grafik Tren (History Chart)
+     5. Responsive (mobile ≤ 600 px)
+================================================================ */
+
+
+/* ================================================================
+   1. HISTORY WRAPPER
+   Kontainer utama yang membungkus semua elemen section.
+================================================================ */
 .history-wrapper {
     width: 100%;
     max-width: 1200px;
@@ -15,24 +30,22 @@
     gap: 15px;
 }
 
+/* Card dasar yang dipakai oleh tabel dan grafik */
 .history-card-box {
     width: 100%;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 14px;
-    padding: 16px 12px 12px 12px;
+    padding: 16px 12px 12px;
     box-shadow: 0 4px 12px rgba(1, 21, 63, 0.16);
     overflow: hidden;
 }
 
-.history-card-box h3 {
-    margin: 0 0 12px 0;
-    font-size: 15px;
-    font-weight: 600;
-    color: #1e293b;
-}
 
-/* ===== TIMELINE SCROLLABLE ===== */
+/* ================================================================
+   2. TIMELINE FORECAST 24 JAM
+   Card scrollable horizontal berisi kartu per jam.
+================================================================ */
 .timeline-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -53,19 +66,7 @@
     margin-bottom: 20px;
 }
 
-.timeline-card-title {
-    margin: 0 0 3px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #1e293b;
-}
-
-.timeline-card-sub {
-    margin: 0;
-    font-size: 12px;
-    color: #64748b;
-}
-
+/* Badge "N AQHI sekarang" di pojok kanan header */
 .timeline-now-badge {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -78,30 +79,7 @@
     align-self: center;
 }
 
-.timeline-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 14px;
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(0,0,0,0.07);
-}
-
-.tl-leg {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: #64748b;
-}
-
-.tl-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-/* Scroll container */
+/* ── Scroll container ── */
 .fc-scroll {
     overflow-x: auto;
     padding-bottom: 6px;
@@ -109,10 +87,9 @@
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
 }
-
-.fc-scroll::-webkit-scrollbar       { height: 4px; }
-.fc-scroll::-webkit-scrollbar-track { background: transparent; }
-.fc-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+.fc-scroll::-webkit-scrollbar        { height: 4px; }
+.fc-scroll::-webkit-scrollbar-track  { background: transparent; }
+.fc-scroll::-webkit-scrollbar-thumb  { background: #cbd5e1; border-radius: 4px; }
 
 .fc-timeline {
     display: flex;
@@ -121,36 +98,42 @@
     padding: 2px 2px 4px;
 }
 
-/* Hour card */
+/* ── Kartu jam ── */
 .fc-hour {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
     padding: 10px 8px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: 0.5px solid #e2e8f0;
-    background: #ffffff;
-    transition: border-color 0.15s, box-shadow 0.15s;
     min-width: 58px;
+    border: 0.5px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    cursor: pointer;
     user-select: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
 }
-
 .fc-hour:hover  { border-color: #94a3b8; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.fc-hour.active { border-width: 1.5px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+.fc-hour.active { border-width: 1.5px;   box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+
+/* Indikator titik pada jam sekarang */
+.fc-hour.is-now .fc-h-time::after {
+    content: ' ●';
+    font-size: 7px;
+    vertical-align: middle;
+    color: inherit;
+}
 
 .fc-h-time  { font-size: 11px; color: #94a3b8; font-weight: 500; }
 
 .fc-h-bar-wrap {
     width: 24px;
+    height: 52px;           /* tinggi tetap, batang tumbuh dari bawah */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    height: 52px;
 }
-
 .fc-h-bar {
     width: 18px;
     border-radius: 4px;
@@ -160,225 +143,21 @@
 .fc-h-val   { font-size: 12px; font-weight: 600; }
 .fc-h-label { font-size: 9px; color: #94a3b8; text-align: center; line-height: 1.2; }
 
-.fc-hour.is-now .fc-h-time::after {
-    content: ' ●';
-    font-size: 7px;
-    vertical-align: middle;
-    color: inherit;
-}
 
-/* ===== DAILY TABLE ===== */
-.daily-card-box {
-    container-type: inline-size;
-    container-name: dailybox;
-}
+/* ================================================================
+   3. TABEL HISTORIS (HD CARD)
+================================================================ */
 
-.daily-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    padding: 0 16px;
-}
-
-.daily-card-header h3,
-.daily-card-header h4 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 700;
-    color: #0f172a;
-}
-
-.daily-tbl-wrap {
-    overflow-x: auto;
-    border-radius: 10px;
-    border: 0.5px solid #e2e8f0;
-}
-
-.daily-tbl {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    table-layout: auto;
-    min-width: 1150px;
-}
-
-.daily-tbl thead tr {
-    border-bottom: 0.5px solid #e2e8f0;
-    background: #f8fafc;
-}
-
-.daily-tbl thead th {
-    padding: 10px 16px;
-    text-align: left;
-    color: #64748b;
-    font-weight: 500;
-    white-space: nowrap;
-    font-size: 12px;
-}
-
-.daily-tbl tbody tr {
-    border-bottom: 0.5px solid #f1f5f9;
-    transition: background 0.12s;
-}
-
-.daily-tbl tbody tr:last-child { border-bottom: none; }
-.daily-tbl tbody tr:hover      { background: #f8fafc; }
-.daily-tbl tbody tr.today-row  { background: #eff6ff; }
-
-.daily-tbl td {
-    padding: 14px 16px;
-    color: #1e293b;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-.daily-tbl .col-day  { font-weight: 600; }
-.daily-tbl .col-loc  { color: #475569; font-weight: 500; }
-.daily-tbl .num-cell { font-weight: 500; }
-
-/* Status pill */
-.daily-status-pill {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 11.5px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.pill-good      { background: #dcfce7; color: #166534; }
-.pill-moderate  { background: #fef9c3; color: #854d0e; }
-.pill-sensitive { background: #ffedd5; color: #c2410c; }
-.pill-unhealthy { background: #fee2e2; color: #991b1b; }
-.pill-very      { background: #f3e8ff; color: #7e22ce; }
-.pill-hazard    { background: #fecaca; color: #7f1d1d; }
-
-/* AQI box (legacy, dipakai di mobile card lama) */
-.aqi-box {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 64px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    color: white;
-}
-
-.aqi-good      { background: #76a13c; }
-.aqi-moderate  { background: #d9b11c; }
-.aqi-unhealthy { background: #d9732e; }
-.aqi-very      { background: #c93d3d; }
-.aqi-hazard    { background: #4d1d2b; }
-.neutral-box   { background: #e4f2ff !important; color: #334155 !important; border: 1px solid #e2e8f0; }
-
-/* Today row */
-.today-row { background: #eff6ff !important; border: 1px solid #1e58d7; }
-
-/* Shared column styles */
-.col-day     { font-weight: 600; color: #1e293b; white-space: nowrap; }
-.col-aqi     { display: flex; align-items: center; }
-.col-pm      { display: flex; flex-direction: column; gap: 2px; }
-.col-pm small{ font-size: 10px; color: #94a3b8; line-height: 1; }
-.col-pm span { font-weight: 500; color: #1e293b; white-space: nowrap; }
-.col-climate { white-space: nowrap; color: #334155; }
-.col-status  { color: #334155; white-space: nowrap; }
-
-/* ===== HISTORY CHART ===== */
-.rwh-header      { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
-.rwh-sub         { margin: 0; font-size: 12px; color: #94a3b8; }
-.rwh-controls    { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-.rwh-highlight   { display: flex; align-items: center; gap: 10px; }
-.rwh-dot         { width: 10px; height: 10px; border-radius: 50%; background: #f97316; flex-shrink: 0; transition: background .3s; }
-.rwh-val-row     { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.rwh-val         { font-size: 15px; font-weight: 600; color: #1e293b; }
-.rwh-desc        { font-size: 13px; color: #64748b; }
-.rwh-meta        { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-.rwh-right       { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.rwh-tabs        { display: flex; background: #f1f5f9; border-radius: 8px; padding: 2px; gap: 1px; }
-.rwh-tab         { border: none; background: transparent; font-size: 12px; color: #64748b; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; }
-.rwh-tab.active  { background: #fff; color: #1e293b; font-weight: 600; border: 0.5px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
-.rwh-select      { font-size: 12px; color: #1e293b; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 5px 10px; cursor: pointer; outline: none; }
-.rwh-canvas-wrap { position: relative; width: 100%; height: 240px; }
-
-.mini-chart-card {
-    background: #ffffff;
-    border: 1px solid #ffffff;
-    border-radius: 12px;
-    padding: 14px 14px 12px;
-    margin-top: 10px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* ===== EXPORT BUTTON ===== */
-.export-btn {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    background: #16a34a;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 7px 16px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-}
-
-.export-btn:hover  { background: #15803d; }
-.export-btn:active { transform: scale(0.97); }
-.export-btn i      { font-size: 14px; }
-
-/* chart-box legacy */
-.chart-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-.chart-box  { background: #ffffff; padding: 10px; border-radius: 10px; }
-
-.chart-container {
-    position: relative;
-    width: 100%;
-    height: 240px;
-}
-
-.chart-container canvas {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-}
-
-@media (min-width: 768px) {
-    .chart-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 600px) {
-    .daily-tbl          { font-size: 12px; }
-    .daily-tbl td,
-    .daily-tbl th       { padding: 10px 12px; }
-    .rwh-canvas-wrap    { height: 180px; }
-    .rwh-controls       { flex-direction: column; align-items: flex-start; }
-}
-
-/* ── HD Card ───────────────────────────── */
+/* Card pembungkus tabel dengan background abu-abu muda */
 .hd-card {
-
     background: #f8fafc;
-
     border: 1px solid #e2e8f0;
-
     border-radius: 22px;
-
     padding: 22px;
-
-    box-shadow:
-        0 8px 24px rgba(15,23,42,.05);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
-/* Header */
+/* ── 3a. Header & Eyebrow ── */
 .hd-header {
     display: flex;
     align-items: flex-start;
@@ -393,6 +172,7 @@
     gap: 4px;
 }
 
+/* Label kecil di atas judul (mis. "HISTORICAL DATA") */
 .hd-eyebrow {
     font-size: 11px;
     font-weight: 600;
@@ -402,78 +182,24 @@
 }
 
 .hd-title {
+    margin: 0;
     font-size: 22px;
     font-weight: 700;
     color: #0f172a;
-    margin: 0;
 }
 
-/* ── Search ───────────────────────────── */
-
-.hd-search-wrap {
-    position: relative;
-    margin-left: auto;
-}
-
-.hd-search {
-    background: #f8fafc;
-    border: 1px solid #dbe2ea;
-    border-radius: 40px;
-    padding: 9px 36px 9px 38px;
-    font-size: 13px;
-    color: #0f172a;
-    outline: none;
-    width: 240px;
-    transition: all .2s;
-}
-
-.hd-search::placeholder {
-    color: #94a3b8;
-}
-
-.hd-search:focus {
-    border-color: #3b82f6;
-    background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(59,130,246,.12);
-}
-
-.hd-search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    font-size: 13px;
-    pointer-events: none;
-}
-
-.hd-clear {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    font-size: 13px;
-    display: none;
-    line-height: 1;
-}
-
-.hd-clear:hover {
-    color: #ef4444;
-}
-
-/* ── Controls ─────────────────────────── */
+/* ── 3b. Toolbar Controls ── */
 .hd-controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
     padding: 0 28px 14px;
     border-bottom: 1px solid #e2e8f0;
 }
 
+/* Toggle Per Jam / Per Hari */
 .hd-toggle {
     display: flex;
     background: #f8fafc;
@@ -495,42 +221,105 @@
     background: transparent;
     color: #64748b;
     cursor: pointer;
-    transition: all .15s;
+    transition: all 0.15s;
 }
+.hd-tab.active            { background: #3b82f6; color: #ffffff; }
+.hd-tab:not(.active):hover { background: #e2e8f0; color: #0f172a; }
 
-.hd-tab.active {
-    background: #3b82f6;
-    color: #ffffff;
-}
+/* Toolbar export icon (copy, csv, excel, pdf, print) */
+.hd-export-toolbar { display: flex; align-items: center; gap: 4px; }
 
-.hd-tab:not(.active):hover {
-    background: #e2e8f0;
-    color: #0f172a;
-}
-
-.hd-count {
-    font-size: 12px;
+.hd-export-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 6px;
+    background: transparent;
     color: #64748b;
-    margin-left: auto;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.hd-export-btn:hover    { background: rgba(148, 163, 184, 0.12); }
+.hd-btn-copy:hover      { color: #6366f1; border-color: #6366f1; }
+.hd-btn-csv:hover       { color: #10b981; border-color: #10b981; }
+.hd-btn-excel:hover     { color: #22c55e; border-color: #22c55e; }
+.hd-btn-pdf:hover       { color: #ef4444; border-color: #ef4444; }
+.hd-btn-print:hover     { color: #3b82f6; border-color: #3b82f6; }
+
+/* Kotak pencarian */
+.hd-search-wrap { position: relative; margin-left: auto; }
+
+.hd-search {
+    background: #f8fafc;
+    border: 1px solid #dbe2ea;
+    border-radius: 40px;
+    padding: 9px 36px 9px 38px;
+    width: 240px;
+    font-size: 13px;
+    color: #0f172a;
+    outline: none;
+    transition: all 0.2s;
+}
+.hd-search::placeholder { color: #94a3b8; }
+.hd-search:focus {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
-/* ── Table ───────────────────────────── */
+.hd-search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+    pointer-events: none;
+}
+
+.hd-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 13px;
+    cursor: pointer;
+    display: none;
+    line-height: 1;
+}
+.hd-clear:hover { color: #ef4444; }
+
+/* ── 3c. Inner Table Card ── */
+
+/* Pembungkus putih di dalam hd-card */
+.hd-inner-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-top: 18px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    transition: box-shadow 0.2s;
+}
+.hd-inner-card:hover { box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
+
+/* Wrapper tabel dengan scroll dua arah */
 .hd-tbl-wrap {
     overflow-x: auto;
     max-height: 400px;
     overflow-y: auto;
 }
+.hd-tbl-wrap::-webkit-scrollbar       { width: 5px; height: 5px; }
+.hd-tbl-wrap::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-.hd-tbl-wrap::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-}
-
-.hd-tbl-wrap::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-
+/* Tabel utama */
 .hd-tbl {
     width: 100%;
     border-collapse: collapse;
@@ -539,63 +328,44 @@
 
 .hd-tbl thead th {
     padding: 11px 14px;
-    text-align: center;
     font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #64748b;
     background: #f1f5f9;
-    position: sticky;
-    top: 0;
+    text-align: center;
     white-space: nowrap;
     border-bottom: 1px solid #cbe3fc;
-}
-
-.hd-tbl thead th:first-child {
-    color: #64748b;
+    position: sticky;
+    top: 0;             /* header tetap terlihat saat scroll vertikal */
 }
 
 .hd-tbl tbody tr {
     border-bottom: 1px solid #dfdfdf;
-    transition: background .12s;
+    transition: background 0.12s;
 }
-
-.hd-tbl tbody tr:hover {
-    background: #f8fafc;
-}
-
-.hd-tbl tbody tr.today-row {
-    background: rgba(59,130,246,0.08);
-}
+.hd-tbl tbody tr:last-child  { border-bottom: none; }
+.hd-tbl tbody tr:hover       { background: #f8fafc; }
+.hd-tbl tbody tr.today-row   { background: rgba(59, 130, 246, 0.08); }
 
 .hd-tbl td {
     padding: 13px 14px;
     color: #334155;
     font-family: 'DM Mono', 'Fira Mono', monospace;
     font-size: 12.5px;
-    white-space: nowrap;
     text-align: center;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
+/* Variasi warna kolom khusus */
 .hd-tbl td.td-time,
-.hd-tbl td.td-date {
-    color: #64748b;
-    font-weight: 600;
-}
+.hd-tbl td.td-date { color: #64748b; font-weight: 600; }
+.hd-tbl td.td-aqhi { color: #0f172a; font-weight: 700; }
+.hd-tbl td.td-loc  { color: #64748b; font-size: 12px; }
 
-.hd-tbl td.td-aqhi {
-    color: #0f172a;
-    font-weight: 700;
-}
-
-.hd-tbl td.td-loc {
-    color: #64748b;
-    font-size: 12px;
-}
-
-/* ── Status Pills ─────────────────────── */
+/* ── Status Pill ── */
 .pill {
     display: inline-block;
     padding: 4px 10px;
@@ -604,30 +374,14 @@
     font-weight: 700;
     letter-spacing: 0.03em;
 }
+.pill-low   { background: rgba(59,  130, 246, 0.12); color: #2563eb; }
+.pill-mod   { background: rgba(234, 179, 8,   0.15); color: #ca8a04; }
+.pill-high  { background: rgba(239, 68,  68,  0.14); color: #dc2626; }
+.pill-vhigh { background: rgba(127, 29,  29,  0.18); color: #7f1d1d; }
 
-.pill-low {
-    background: rgba(59,130,246,0.12);
-    color: #2563eb;
-}
-
-.pill-mod {
-    background: rgba(234,179,8,0.15);
-    color: #ca8a04;
-}
-
-.pill-high {
-    background: rgba(239,68,68,0.14);
-    color: #dc2626;
-}
-
-.pill-vhigh {
-    background: rgba(127,29,29,0.18);
-    color: #7f1d1d;
-}
-
-/* ── Empty State ─────────────────────── */
+/* ── 3d. Empty State ── */
 .hd-empty {
-    display: none;
+    display: none;          /* ditampilkan via JS saat filter kosong */
     flex-direction: column;
     align-items: center;
     gap: 8px;
@@ -635,14 +389,68 @@
     color: #64748b;
     font-size: 13px;
 }
+.hd-empty i { font-size: 28px; color: #cbd5e1; }
 
-.hd-empty i {
-    font-size: 28px;
-    color: #cbd5e1;
+/* ── 3e. Footer & Pagination ── */
+.hd-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 18px;
+    border-top: 1px solid #eef2f7;
+    background: #fcfdff;
 }
 
-/* ── GRAPH TOGGLE ───────────────── */
+.hd-entries {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+}
+.hd-entries select {
+    border: 1px solid #dbe2ea;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    outline: none;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.hd-entries select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
 
+.hd-footer-info {
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+
+/* ================================================================
+   4. GRAFIK TREN (HISTORY CHART)
+================================================================ */
+
+/* Header grafik: judul + tombol toggle bar/line */
+.daily-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 16px;
+    position: relative;
+    z-index: 5;         /* pastikan tombol bisa diklik di atas canvas */
+}
+.daily-card-header h4 { margin: 0; font-size: 22px; font-weight: 700; color: #0f172a; }
+
+/* Toggle bar / line */
 .graph-toggle {
     display: flex;
     gap: 6px;
@@ -650,205 +458,108 @@
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 4px;
-}
-
-.graph-btn {
-
-    width: 38px;
-    height: 38px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: none;
-
-    background: transparent;
-
-    border-radius: 10px;
-
-    font-size: 14px;
-
-    color: #64748b;
-
-    cursor: pointer;
-
-    transition: .18s ease;
-}
-
-.graph-btn.active {
-
-    background: #3b82f6;
-
-    color: #ffffff;
-
-    box-shadow:
-        0 4px 10px rgba(59,130,246,.22);
-}
-
-.graph-btn:hover:not(.active) {
-
-    background: #eff6ff;
-
-    color: #2563eb;
-}
-
-/* FIX GRAPH TOGGLE CLICK */
-
-.daily-card-header {
-    position: relative;
-    z-index: 5;
-}
-
-.graph-toggle,
-.graph-btn,
-.export-btn {
     position: relative;
     z-index: 10;
 }
 
-.mini-chart-card,
-.rwh-canvas-wrap,
-#rwhChart {
+.graph-btn {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #64748b;
+    cursor: pointer;
+    transition: 0.18s ease;
+}
+.graph-btn.active          { background: #3b82f6; color: #ffffff; box-shadow: 0 4px 10px rgba(59,130,246,0.22); }
+.graph-btn:hover:not(.active) { background: #eff6ff; color: #2563eb; }
+
+/* Panel info (nilai aktif + deskripsi) */
+.rwh-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.rwh-highlight { display: flex; align-items: center; gap: 10px; }
+
+/* Dot warna metrik aktif */
+.rwh-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #f97316;
+    flex-shrink: 0;
+    transition: background 0.3s;
+}
+
+.rwh-val-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rwh-val     { font-size: 15px; font-weight: 600; color: #1e293b; }
+.rwh-desc    { font-size: 13px; color: #64748b; }
+.rwh-meta    { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+/* Grup kanan: tab periode + select metrik */
+.rwh-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.rwh-tabs {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 2px;
+    gap: 1px;
+}
+.rwh-tab          { border: none; background: transparent; font-size: 12px; color: #64748b; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+.rwh-tab.active   { background: #fff; color: #1e293b; font-weight: 600; border: 0.5px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+.rwh-select {
+    font-size: 12px;
+    color: #1e293b;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    outline: none;
+}
+
+/* Card pembungkus canvas */
+.mini-chart-card {
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+    padding: 14px 14px 12px;
+    margin: 10px auto 0;
+    max-width: 700px;
     position: relative;
     z-index: 1;
 }
 
-/* ── EXPORT TOOLBAR ── */
-.hd-export-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+/* Wrapper canvas dengan tinggi tetap */
+.rwh-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 240px;
 }
 
-.hd-export-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-    border: 1px solid rgba(148,163,184,0.25);
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
-    color: #64748b;
-}
+#rwhChart { position: relative; z-index: 1; }
 
-.hd-export-btn:hover { background: rgba(148,163,184,0.12); }
 
-/* warna icon per tipe */
-.hd-btn-copy:hover  { color: #6366f1; border-color: #6366f1; }
-.hd-btn-csv:hover   { color: #10b981; border-color: #10b981; }
-.hd-btn-excel:hover { color: #22c55e; border-color: #22c55e; }
-.hd-btn-pdf:hover   { color: #ef4444; border-color: #ef4444; }
-.hd-btn-print:hover { color: #3b82f6; border-color: #3b82f6; }
+/* ================================================================
+   5. RESPONSIVE (mobile ≤ 600 px)
+================================================================ */
+@media (max-width: 600px) {
+    .hd-tbl td,
+    .hd-tbl th    { padding: 10px 12px; }
+    .hd-tbl       { font-size: 12px; }
 
-.hd-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-/* ── INNER TABLE CARD ───────────────── */
-
-.hd-inner-card {
-
-    background: #ffffff;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 18px;
-
-    overflow: hidden;
-
-    margin-top: 18px;
-
-    box-shadow:
-        0 2px 10px rgba(15,23,42,.04);
-
-    transition: .2s ease;
-}
-
-.hd-inner-card:hover {
-
-    box-shadow:
-        0 8px 24px rgba(15,23,42,.08);
-}
-
-/* ── SHOW ENTRIES ───────────────── */
-
-.hd-entries {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    font-size: 13px;
-    font-weight: 500;
-
-    color: #64748b;
-}
-
-.hd-entries select {
-
-    border: 1px solid #dbe2ea;
-
-    background: #ffffff;
-
-    border-radius: 10px;
-
-    padding: 6px 12px;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    color: #0f172a;
-
-    outline: none;
-
-    cursor: pointer;
-
-    transition: .15s ease;
-}
-
-.hd-entries select:focus {
-
-    border-color: #3b82f6;
-
-    box-shadow:
-        0 0 0 3px rgba(59,130,246,.12);
-}
-
-/* ── TABLE FOOTER ───────────────── */
-
-.hd-footer {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 16px;
-
-    padding: 16px 18px;
-
-    border-top: 1px solid #eef2f7;
-
-    background: #fcfdff;
-}
-
-/* info kanan */
-
-.hd-footer-info {
-
-    font-size: 13px;
-
-    color: #64748b;
-
-    font-weight: 500;
+    .rwh-canvas-wrap { height: 180px; }
+    .rwh-controls    { flex-direction: column; align-items: flex-start; }
 }
