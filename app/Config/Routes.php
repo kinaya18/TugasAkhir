@@ -27,3 +27,23 @@ $routes->options('(:any)', 'Api::options');
 
 //realtime
 $routes->get('/latest-data', 'Home::latestData');
+
+
+// Routes untuk prediksi
+$routes->group('prediction', function($routes) {
+    $routes->get('generate', 'Prediction::generate');
+    $routes->get('getLatest', 'Prediction::getLatest');
+    $routes->get('getHistory', 'Prediction::getHistory');
+    $routes->get('getByDateRange', 'Prediction::getByDateRange');
+    $routes->get('getStatistics', 'Prediction::getStatistics');
+    $routes->get('exportCsv', 'Prediction::exportCsv');
+    $routes->get('chart', 'Prediction::chart');
+    $routes->get('status', 'Prediction::status');
+    $routes->delete('cleanOldData', 'Prediction::cleanOldData');
+    $routes->get('autoGenerate', 'Prediction::autoGenerate');
+});
+
+// Alias untuk akses mudah
+$routes->get('prediksi/generate', 'Prediction::generate');
+$routes->get('prediksi/latest', 'Prediction::getLatest');
+$routes->get('prediksi/history', 'Prediction::getHistory');
