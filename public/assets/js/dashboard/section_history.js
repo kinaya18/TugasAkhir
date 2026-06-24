@@ -2,12 +2,13 @@
    section_history.js
    JavaScript untuk Section 2 – Riwayat & Grafik Kualitas Udara
 
-   Dibagi menjadi 5 blok:
+   Dibagi menjadi 6 blok:
      A. Konstanta warna, satuan, deskripsi per metrik
      B. Fungsi render grafik (rwhRender, rwhSetTab, setChartType)
      C. Fungsi render timeline forecast 24 jam
-     D. Fungsi export (Excel, CSV, PDF, Print, Copy)
-     E. Fungsi kontrol tabel (toggle view, filter, pagination)
+     D. Fungsi render prediksi SVR 7 hari ke depan
+     E. Fungsi export (Excel, CSV, PDF, Print, Copy)
+     F. Fungsi kontrol tabel (toggle view, filter, pagination)
 
    Dependensi (harus dimuat sebelum file ini di <head>):
      - Chart.js
@@ -19,7 +20,7 @@
 
 /* ================================================================
    A. KONSTANTA METRIK
-   Digunakan bersama oleh grafik dan timeline.
+   Digunakan bersama oleh grafik, timeline, dan prediksi.
 ================================================================ */
 
 /**
@@ -432,7 +433,103 @@ renderTimeline();
 
 
 /* ================================================================
-   D. FUNGSI EXPORT
+   D. PREDIKSI SVR 7 HARI KE DEPAN
+   Sumber: window.DASH.predictionFuture (dari tabel
+   data_udara_prediksi_future, BUKAN data sensor aktual).
+================================================================ */
+
+/**
+ * Handler klik kartu prediksi.
+ * Menandai kartu aktif (tidak menyentuh grafik history,
+ * karena ini data prediksi, bukan history).
+ */
+function onPredictionClick(clickedEl, item, color) {
+    // Reset semua kartu prediksi
+    document.querySelectorAll('#prediction-timeline .fc-hour').forEach(x => {
+        x.classList.remove('active');
+        x.style.borderColor = '';
+        x.style.color       = '';
+    });
+
+    // Tandai kartu yang diklik
+    clickedEl.classList.add('active');
+    clickedEl.style.borderColor = color;
+    clickedEl.style.color       = color;
+}
+
+/**
+ * Merender semua kartu prediksi SVR 7 hari ke depan.
+ * Label kartu memakai tanggal + jam (karena rentangnya beberapa hari,
+ * berbeda dari timeline 24 jam yang cukup pakai jam saja).
+ */
+function renderPredictionFuture() {
+    const container = document.getElementById('prediction-timeline');
+    const emptyEl    = document.getElementById('prediction-empty');
+    if (!container) return;
+
+    const data = window.DASH.predictionFuture || [];
+
+    // Tidak ada dummy fallback untuk prediksi — kalau kosong,
+    // tampilkan pesan empty state agar tidak menyesatkan pengguna
+    // dengan data yang terlihat seperti hasil model padahal dummy.
+    if (data.length === 0) {
+        container.innerHTML = '';
+        if (emptyEl) emptyEl.style.display = 'flex';
+        const badge = document.getElementById('prediction-now-badge');
+        if (badge) badge.textContent = '-- AQHI prediksi';
+        return;
+    }
+
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    const maxVal  = Math.max(...data.map(d => d.aqhi ?? d.aqi ?? 0));
+    const BAR_MAX = 52; // tinggi maksimum batang dalam px
+
+    container.innerHTML = '';
+
+    // Perbarui badge AQHI prediksi pertama di header
+    const firstItem = data[0];
+    const badge      = document.getElementById('prediction-now-badge');
+    if (badge && firstItem) {
+        const firstVal   = parseFloat(firstItem.aqhi ?? firstItem.aqi) || 0;
+        const firstColor = getAqhiColor(firstVal);
+        badge.textContent       = firstVal + ' AQHI prediksi';
+        badge.style.color       = firstColor;
+        badge.style.borderColor = firstColor + '55';
+    }
+
+    // Buat kartu untuk setiap titik prediksi
+    data.forEach((item, i) => {
+        const aqhi   = parseFloat(item.aqhi ?? item.aqi) || 0;
+        const tgl    = item.date || '';
+        const jam    = item.time || '';
+        const label  = tgl ? (tgl.split(' ')[0] + ' ' + jam) : (jam || formatHour(i));
+        const color  = getAqhiColor(aqhi);
+        const barH   = Math.max(4, Math.round((aqhi / Math.max(maxVal, 11)) * BAR_MAX));
+
+        const el = document.createElement('div');
+        el.className = 'fc-hour' + (i === 0 ? ' active' : '');
+        if (i === 0) { el.style.borderColor = color; el.style.color = color; }
+
+        el.innerHTML = `
+            <span class="fc-h-time" style="${i === 0 ? 'color:' + color + ';font-weight:700;' : ''}">${label}</span>
+            <div class="fc-h-bar-wrap">
+                <div class="fc-h-bar" style="height:${barH}px;background:${color};"></div>
+            </div>
+            <span class="fc-h-val"   style="color:${color};">${aqhi}</span>
+            <span class="fc-h-label">${getAqhiLabelShort(aqhi)}</span>
+        `;
+
+        el.addEventListener('click', () => onPredictionClick(el, item, color));
+        container.appendChild(el);
+    });
+}
+
+renderPredictionFuture();
+
+
+/* ================================================================
+   E. FUNGSI EXPORT
 ================================================================ */
 
 /**
@@ -623,7 +720,7 @@ function hdExport(type) {
 
 
 /* ================================================================
-   E. KONTROL TABEL HISTORIS
+   F. KONTROL TABEL HISTORIS
    Mencakup: toggle tampilan, filter keyword, pagination
 ================================================================ */
 

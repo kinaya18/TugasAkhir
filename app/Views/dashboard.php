@@ -21,7 +21,8 @@ window.DASH = {
         )
     ) ?>,
     monthlyRaw: <?= json_encode($historyMonthly ?? []) ?>,
-    forecastHourly: <?= json_encode($forecastHourly ?? []) ?>
+    forecastHourly: <?= json_encode($forecastHourly ?? []) ?>,
+    predictionFuture: <?= json_encode($predictionFuture ?? []) ?>
 };
 </script>
 

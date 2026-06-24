@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use App\Models\DataUdaraModel;
+use App\Models\PredictionModel;
 
 class Home extends BaseController
 {
     protected $dataUdaraModel;
+    protected $predictionModel;
 
     public function __construct()
     {
         $this->dataUdaraModel = new DataUdaraModel();
+        $this->predictionModel = new PredictionModel();
     }
 
     public function index()
@@ -51,7 +54,6 @@ class Home extends BaseController
                 'no2'         => (float) ($latestRaw['no2'] ?? 0),
                 'suhu'        => (float) ($latestRaw['temperature'] ?? 0),
                 'kelembaban'  => (float) ($latestRaw['humidity'] ?? 0),
-                'location' => 'Mendeteksi lokasi...',
                 'timestamp'   => $latestRaw['timestamp'] ?? null,
             ];
         }
@@ -99,7 +101,6 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location' => 'Mendeteksi lokasi...',
             ];
         }
 
@@ -148,7 +149,6 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location' => 'Mendeteksi lokasi...',
             ];
 
             $counter++;
@@ -195,7 +195,100 @@ class Home extends BaseController
                 'no2'        => round($row['no2'], 1),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
-                'location' => 'Mendeteksi lokasi...',
+            ];
+        }
+
+        // ==================================================
+        // FORECAST HOURLY (24 JAM KE DEPAN, HASIL PREDIKSI SVR)
+        // Catatan: tabel data_udara_prediksi_future menyimpan baris
+        // tiap interval_minutes (5 menit), sehingga 1 jam = 12 baris.
+        // Filter & urutan pakai kolom `timestamp` (tanggal yang
+        // DIPREDIKSI), bukan `prediction_time` (kapan generate
+        // dijalankan — sama untuk semua baris dalam satu batch).
+        // ==================================================
+        $forecastQuery = $db->query("
+            SELECT 
+                DATE_FORMAT(timestamp, '%Y-%m-%d %H:00:00') as jam_bucket,
+                AVG(pm2_5) as pm25,
+                AVG(pm10) as pm10,
+                AVG(pm1_0) as pm1,
+                AVG(pollutant) as polutan,
+                AVG(ozone) as o3,
+                AVG(no2) as no2,
+                AVG(temperature) as temp,
+                AVG(humidity) as humidity
+            FROM data_udara_prediksi_future
+            WHERE timestamp >= NOW()
+            GROUP BY jam_bucket
+            ORDER BY jam_bucket ASC
+            LIMIT 24
+        ");
+
+        $forecastHourly = [];
+
+        $forecastRows = $forecastQuery->getResultArray();
+
+        foreach ($forecastRows as $row) {
+
+            $pm25 = (float) $row['pm25'];
+            $aqi  = $this->hitungAqi($pm25);
+
+            $forecastHourly[] = [
+                'time'     => date('H:i', strtotime($row['jam_bucket'])),
+                'aqhi'     => calcAqhi(
+                    (float) $row['no2'],
+                    (float) $row['o3'],
+                    $pm25
+                ),
+                'aqi'      => $aqi,
+                'pm25'     => round($pm25, 1),
+                'pm10'     => round((float) $row['pm10'], 1),
+                'pm1'      => round((float) $row['pm1'], 1),
+                'polutan'  => round((float) $row['polutan'], 1),
+                'o3'       => round((float) $row['o3'], 1),
+                'no2'      => round((float) $row['no2'], 1),
+                'temp'     => round((float) $row['temp'], 1),
+                'humidity' => round((float) $row['humidity'], 1),
+            ];
+        }
+
+        // ==================================================
+        // PREDIKSI SVR — RENTANG PENUH (DARI data_udara_prediksi_future)
+        // Catatan: diurutkan berdasarkan `timestamp` (tanggal yang
+        // diprediksi), bukan `prediction_time` (kapan model dijalankan).
+        // ==================================================
+        $rawPrediction = $this->predictionModel
+            ->orderBy('timestamp', 'ASC')
+            ->findAll();
+
+        $predictionFuture = [];
+
+        foreach ($rawPrediction as $row) {
+
+            $pm25 = (float) ($row['pm2_5'] ?? 0);
+            $aqi  = $this->hitungAqi($pm25);
+
+            $predictionFuture[] = [
+                'timestamp'       => $row['timestamp'] ?? null,
+                'prediction_time' => $row['prediction_time'] ?? null,
+                'date'            => $row['timestamp'] ? date('d M Y', strtotime($row['timestamp'])) : '-',
+                'time'            => $row['timestamp'] ? date('H:i', strtotime($row['timestamp'])) : '-',
+                'aqhi'            => calcAqhi(
+                    (float) ($row['no2'] ?? 0),
+                    (float) ($row['ozone'] ?? 0),
+                    $pm25
+                ),
+                'aqi'             => $aqi,
+                'pm25'            => round($pm25, 1),
+                'pm10'            => round((float) ($row['pm10'] ?? 0), 1),
+                'pm1'             => round((float) ($row['pm1_0'] ?? 0), 1),
+                'polutan'         => round((float) ($row['pollutant'] ?? 0), 1),
+                'o3'              => round((float) ($row['ozone'] ?? 0), 1),
+                'no2'             => round((float) ($row['no2'] ?? 0), 1),
+                'temp'            => round((float) ($row['temperature'] ?? 0), 1),
+                'humidity'        => round((float) ($row['humidity'] ?? 0), 1),
+                'days_ahead'      => $row['days_ahead'] ?? null,
+                'model_type'      => $row['model_type'] ?? 'svr',
             ];
         }
 
@@ -203,12 +296,13 @@ class Home extends BaseController
         // SEND TO VIEW
         // ==================================================
         $data = [
-            'title'           => 'Dashboard',
-            'latestUdara'     => $latestUdara,
-            'historyHourly'   => $historyHourly,
-            'historyDaily'    => $historyDaily,
-            'historyMonthly'  => $historyMonthly,
-            'forecastHourly'  => [],
+            'title'             => 'Dashboard',
+            'latestUdara'       => $latestUdara,
+            'historyHourly'     => $historyHourly,
+            'historyDaily'      => $historyDaily,
+            'historyMonthly'    => $historyMonthly,
+            'forecastHourly'    => $forecastHourly,
+            'predictionFuture'  => $predictionFuture,
         ];
 
         return view('dashboard', $data);

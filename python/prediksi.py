@@ -71,7 +71,8 @@ def get_timezone_offset():
 # LOAD MODEL
 # =====================================================
 print("Loading models...")
-model_path = 'models/model_svr.pkl'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BASE_DIR, '..', 'models', 'model_svr.pkl')
 
 if not os.path.exists(model_path):
     print(f"❌ Model file not found at: {model_path}")

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class PredictionModel extends Model
 {
-    protected $table = 'data_udara_prediksi';
+    protected $table = 'data_udara_prediksi_future';
     protected $primaryKey = 'id';
     
     protected $allowedFields = [
@@ -20,8 +20,10 @@ class PredictionModel extends Model
         'ozone', 
         'no2', 
         'prediction_time', 
-        'model_type', 
-        'confidence_score'
+        'model_type',
+        'days_ahead',
+        'interval_minutes',
+        'prediction_start',
     ];
     
     protected $useTimestamps = false;
@@ -38,7 +40,6 @@ class PredictionModel extends Model
         'pollutant' => 'permit_empty|numeric|greater_than[0]',
         'ozone' => 'permit_empty|numeric|greater_than[0]',
         'no2' => 'permit_empty|numeric|greater_than[0]',
-        'confidence_score' => 'permit_empty|numeric|greater_than_equal_to[0]|less_than_equal_to[1]'
     ];
 
     protected $validationMessages = [
@@ -46,10 +47,6 @@ class PredictionModel extends Model
             'greater_than' => 'Kelembaban harus lebih dari 0%',
             'less_than_equal_to' => 'Kelembaban tidak boleh lebih dari 100%'
         ],
-        'confidence_score' => [
-            'greater_than_equal_to' => 'Confidence score minimal 0',
-            'less_than_equal_to' => 'Confidence score maksimal 1'
-        ]
     ];
 
     /**
@@ -75,6 +72,14 @@ class PredictionModel extends Model
             
             if (!isset($data['model_type'])) {
                 $data['model_type'] = 'svr';
+            }
+
+            if (!isset($data['days_ahead'])) {
+                $data['days_ahead'] = 7;
+            }
+
+            if (!isset($data['interval_minutes'])) {
+                $data['interval_minutes'] = 5;
             }
             
             // Insert data
@@ -249,8 +254,7 @@ class PredictionModel extends Model
                     MAX(ozone) as max_ozone,
                     AVG(no2) as avg_no2,
                     MIN(no2) as min_no2,
-                    MAX(no2) as max_no2,
-                    AVG(confidence_score) as avg_confidence
+                    MAX(no2) as max_no2
                 ')
                 ->where('prediction_time >=', $dateTime);
             
@@ -373,23 +377,6 @@ class PredictionModel extends Model
         } catch (\Exception $e) {
             log_message('error', '[PREDICTION MODEL] Connection check failed: ' . $e->getMessage());
             return false;
-        }
-    }
-
-    /**
-     * Get latest confidence score
-     */
-    public function getLatestConfidence()
-    {
-        try {
-            $result = $this->select('confidence_score')
-                        ->orderBy('id', 'DESC')
-                        ->first();
-            
-            return $result ? $result['confidence_score'] : null;
-        } catch (\Exception $e) {
-            log_message('error', '[PREDICTION MODEL] Get latest confidence error: ' . $e->getMessage());
-            return null;
         }
     }
 

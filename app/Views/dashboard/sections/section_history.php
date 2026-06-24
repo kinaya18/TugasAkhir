@@ -108,7 +108,6 @@
                             <th>O<sub>3</sub></th>
                             <th>TEMP</th>
                             <th>HUMIDITY</th>
-                            <th>LOCATION</th>
                             <th>STATUS</th>
                         </tr>
                     </thead>
@@ -127,7 +126,6 @@
                             <td><?= $item['o3']       ?? '-' ?></td>
                             <td><?= $item['temp']     ?? '-' ?>°C</td>
                             <td><?= $item['humidity'] ?? '-' ?>%</td>
-                            <td class="td-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
                             <td>
                                 <span class="pill <?= getAqhiPillClass($item['aqhi'] ?? 0) ?>">
                                     <?= getAqhiLabel($item['aqhi'] ?? 0) ?>
@@ -149,7 +147,6 @@
                             <td><?= $item['o3']       ?? '-' ?></td>
                             <td><?= $item['temp']     ?? '-' ?>°C</td>
                             <td><?= $item['humidity'] ?? '-' ?>%</td>
-                            <td class="td-loc"><?= $item['location'] ?? 'Bojongsoang' ?></td>
                             <td>
                                 <span class="pill <?= getAqhiPillClass($item['aqhi'] ?? 0) ?>">
                                     <?= getAqhiLabel($item['aqhi'] ?? 0) ?>

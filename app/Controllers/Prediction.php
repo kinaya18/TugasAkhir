@@ -17,8 +17,8 @@ class Prediction extends BaseController
     {
         parent::initController($request, $response, $logger);
         $this->predictionModel = new PredictionModel();
-        $this->apiUrl = 'http://localhost';
-        $this->apiPort = 5000;
+        $this->apiUrl = env('PYTHON_API_URL', 'http://localhost');
+        $this->apiPort = env('PYTHON_API_PORT', 5000);
     }
 
     /**
@@ -109,6 +109,8 @@ class Prediction extends BaseController
     {
         try {
             // Siapkan data untuk disimpan
+            // Catatan: tidak ada confidence_score karena kolom tersebut
+            // tidak ada di tabel data_udara_prediksi_future
             $data = [
                 'timestamp' => date('Y-m-d H:i:s'),
                 'temperature' => $predictionData['temperature']['value'] ?? null,
@@ -121,7 +123,9 @@ class Prediction extends BaseController
                 'no2' => $predictionData['no2']['value'] ?? null,
                 'prediction_time' => date('Y-m-d H:i:s'),
                 'model_type' => 'svr',
-                'confidence_score' => $this->calculateConfidenceScore($predictionData)
+                'days_ahead' => $predictionData['days_ahead'] ?? 7,
+                'interval_minutes' => $predictionData['interval_minutes'] ?? 5,
+                'prediction_start' => $predictionData['prediction_start'] ?? date('Y-m-d H:i:s'),
             ];
             
             // Simpan via model
@@ -148,25 +152,6 @@ class Prediction extends BaseController
                 'message' => $e->getMessage()
             ];
         }
-    }
-
-    /**
-     * Hitung confidence score dari prediksi
-     */
-    private function calculateConfidenceScore($predictionData)
-    {
-        $scores = [];
-        foreach ($predictionData as $key => $value) {
-            if (isset($value['r2'])) {
-                $scores[] = $value['r2'];
-            }
-        }
-        
-        if (count($scores) > 0) {
-            return array_sum($scores) / count($scores);
-        }
-        
-        return null;
     }
 
     /**
@@ -359,7 +344,7 @@ class Prediction extends BaseController
                 'ID', 'Timestamp', 'Suhu (°C)', 'Kelembaban (%)', 
                 'PM1.0 (μg/m³)', 'PM2.5 (μg/m³)', 'PM10 (μg/m³)',
                 'Polutan (ppm)', 'Ozon (ppm)', 'NO2 (ppm)',
-                'Waktu Prediksi', 'Model', 'Confidence (%)'
+                'Waktu Prediksi', 'Model', 'Days Ahead', 'Interval (menit)'
             ]);
             
             // Data
@@ -377,7 +362,8 @@ class Prediction extends BaseController
                     $row['no2'] ?? '',
                     $row['prediction_time'] ?? '',
                     $row['model_type'] ?? 'svr',
-                    isset($row['confidence_score']) ? round($row['confidence_score'] * 100, 2) : ''
+                    $row['days_ahead'] ?? '',
+                    $row['interval_minutes'] ?? ''
                 ]);
             }
             
@@ -393,44 +379,6 @@ class Prediction extends BaseController
             ])->setStatusCode(500);
         }
     }
-
-    // /**
-    //  * Hapus data prediksi lama
-    //  * URL: /prediction/cleanOldData
-    //  * Method: DELETE
-    //  * Parameter: days (optional, default 30)
-    //  */
-    // public function cleanOldData()
-    // {
-    //     try {
-    //         $days = $this->request->getGet('days') ?? 30;
-            
-    //         if ($days < 1) {
-    //             return $this->response->setJSON([
-    //                 'status' => 'error',
-    //                 'message' => 'Parameter days harus lebih dari 0'
-    //             ])->setStatusCode(400);
-    //         }
-            
-    //         $deleted = $this->predictionModel->deleteOldData($days);
-            
-    //         log_message('info', "[PREDICTION] Deleted {$deleted} old records (>{$days} days)");
-            
-    //         return $this->response->setJSON([
-    //             'status' => 'success',
-    //             'message' => "Berhasil menghapus {$deleted} data prediksi lebih dari {$days} hari",
-    //             'deleted_count' => $deleted
-    //         ]);
-            
-    //     } catch (\Exception $e) {
-    //         log_message('error', '[PREDICTION] Clean old data error: ' . $e->getMessage());
-            
-    //         return $this->response->setJSON([
-    //             'status' => 'error',
-    //             'message' => 'Error: ' . $e->getMessage()
-    //         ])->setStatusCode(500);
-    //     }
-    // }
 
     /**
      * Auto-generate prediksi (untuk cron job)
