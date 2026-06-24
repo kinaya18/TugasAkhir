@@ -166,15 +166,63 @@ function rwhGetDataset(tabKey, metricKey) {
     return { labels, values };
 }
 
+/** Jumlah desimal tampilan per metrik. Metrik dengan rentang nilai kecil
+ *  (O3, NO2) butuh desimal lebih banyak agar tidak terlihat sebagai 0. */
+const RWH_DECIMALS = {
+    aqi: 0, aqhi: 0, pm25: 1, pm10: 1, pm1: 1,
+    no2: 3, o3: 3, polutan: 0, temp: 1, humidity: 0,
+};
+
+/** Memformat nilai metrik sesuai jumlah desimal yang sesuai */
+function rwhFormatValue(value, metricKey) {
+    const decimals = RWH_DECIMALS[metricKey] ?? 0;
+    return Number(value).toFixed(decimals);
+}
+
 /**
  * Memperbarui info panel (dot warna, nilai, deskripsi, label waktu)
  * saat pengguna hover atau klik batang/titik grafik.
  */
 function rwhUpdateInfo(label, value, metricKey) {
     document.getElementById('rwh-dot').style.background = RWH_COLOR[metricKey](value);
-    document.getElementById('rwh-val').textContent      = value + ' ' + RWH_UNIT[metricKey];
+    document.getElementById('rwh-val').textContent      = rwhFormatValue(value, metricKey) + ' ' + RWH_UNIT[metricKey];
     document.getElementById('rwh-desc').textContent     = RWH_DESC[metricKey](value);
     document.getElementById('rwh-meta').textContent     = label + ' · ' + RWH_TAB_LABEL[rwhTab];
+}
+
+/**
+ * Menentukan nilai minimum sumbu Y secara dinamis.
+ * Untuk metrik dengan rentang desimal kecil (O3, NO2),
+ * sumbu dimulai sedikit di bawah nilai terkecil data
+ * (bukan dari 0) agar variasi nilai tetap terlihat jelas.
+ * Metrik lain tetap mulai dari 0 seperti biasa.
+ */
+function rwhGetYMin(metricKey, values) {
+    if (!['o3', 'no2'].includes(metricKey)) return undefined; // pakai beginAtZero biasa
+
+    const minVal = Math.min(...values);
+    // Beri sedikit ruang di bawah nilai terkecil (10% dari range, minimal 0.005)
+    const maxVal = Math.max(...values);
+    const range  = Math.max(maxVal - minVal, 0.01);
+    const pad    = range * 0.15;
+
+    return Math.max(0, +(minVal - pad).toFixed(3));
+}
+
+/**
+ * Menentukan nilai maksimum sumbu Y secara dinamis.
+ * Memberi padding di atas nilai terbesar data agar puncak
+ * grafik tidak menempel di tepi atas chart.
+ */
+function rwhGetYMax(metricKey, values) {
+    if (!['o3', 'no2'].includes(metricKey)) return undefined; // auto seperti biasa
+
+    const minVal = Math.min(...values);
+    const maxVal = Math.max(...values);
+    const range  = Math.max(maxVal - minVal, 0.01);
+    const pad    = range * 0.15;
+
+    return +(maxVal + pad).toFixed(3);
 }
 
 /**
@@ -247,7 +295,7 @@ function rwhRender() {
                             if (rwhTab === 'jam' && ctx.parsed.y === 0) {
                                 return ' Alat mati / tidak ada data';
                             }
-                            return ' ' + ctx.parsed.y + ' ' + RWH_UNIT[metric];
+                            return ' ' + rwhFormatValue(ctx.parsed.y, metric) + ' ' + RWH_UNIT[metric];
                         },
                     },
                 },
@@ -261,8 +309,14 @@ function rwhRender() {
                 y: {
                     grid:        { color: 'rgba(148,163,184,0.12)' },
                     border:      { display: false },
-                    beginAtZero: true,
-                    ticks:       { font: { size: 11 }, color: '#94a3b8' },
+                    beginAtZero: ['o3', 'no2'].includes(metric) ? false : true,
+                    min:         rwhGetYMin(metric, values),
+                    max:         rwhGetYMax(metric, values),
+                    ticks: {
+                        font: { size: 11 },
+                        color: '#94a3b8',
+                        precision: ['o3', 'no2'].includes(metric) ? 3 : 0,
+                    },
                 },
             },
             // Update info panel saat hover / klik
@@ -374,42 +428,52 @@ function onTimelineClick(clickedEl, item, color) {
 
 /**
  * Merender semua kartu jam pada timeline forecast.
- * Kartu jam sekarang diberi class 'is-now' dan di-scroll ke tengah.
+ * Kartu pertama selalu menampilkan data AQHI SEKARANG
+ * (sinkron dengan hero card), diberi label waktu "Now".
+ * Kartu berikutnya adalah forecast jam demi jam.
+ * Tidak ada highlight/auto-scroll karena kartu "now" selalu
+ * berada di posisi pertama (paling kiri).
  */
 function renderTimeline() {
     const container = document.getElementById('fc-timeline');
     if (!container) return;
 
-    const data    = window.DASH.forecastHourly.length > 0 ? window.DASH.forecastHourly : generateDummyForecast();
+    const forecastData = window.DASH.forecastHourly.length > 0
+        ? window.DASH.forecastHourly
+        : generateDummyForecast();
+
+    // Ambil data AQHI sekarang dari sumber yang sama dengan hero card
+    const latest   = window.DASH.latestData || {};
+    const nowAqhi   = parseFloat(latest.aqhi) || 0;
+    const nowItem   = { aqhi: nowAqhi, time: 'Now' };
+
+    // Gabungkan: kartu "Now" di depan, lalu forecast jam-jam berikutnya
+    const data = [nowItem, ...forecastData];
+
     const maxVal  = Math.max(...data.map(d => d.aqhi ?? d.aqi));
     const BAR_MAX = 52; // tinggi maksimum batang dalam px
-    const nowHour = new Date().getHours();
 
     container.innerHTML = '';
 
     // Perbarui badge AQHI sekarang di header
-    const nowItem  = data[0];
     const nowBadge = document.getElementById('timeline-now-badge');
-    if (nowBadge && nowItem) {
-        const nowVal   = parseFloat(nowItem.aqhi ?? nowItem.aqi) || 0;
-        const nowColor = getAqhiColor(nowVal);
-        nowBadge.textContent       = nowVal + ' AQHI sekarang';
+    if (nowBadge) {
+        const nowColor = getAqhiColor(nowAqhi);
+        nowBadge.textContent       = nowAqhi + ' AQHI sekarang';
         nowBadge.style.color       = nowColor;
         nowBadge.style.borderColor = nowColor + '55';
     }
 
-    // Buat kartu untuk setiap jam
+    // Buat kartu untuk setiap titik (Now + forecast)
     data.forEach((item, i) => {
-        const aqhi      = parseFloat(item.aqhi ?? item.aqi) || 0;
-        const jam       = item.time || item.jam || formatHour(i);
-        const color     = getAqhiColor(aqhi);
-        const barH      = Math.max(4, Math.round((aqhi / Math.max(maxVal, 11)) * BAR_MAX));
-        const itemHour  = parseInt(jam.split(':')[0]);
-        const isNow     = itemHour === nowHour && i < 24;
+        const aqhi   = parseFloat(item.aqhi ?? item.aqi) || 0;
+        const jam    = item.time || item.jam || formatHour(i - 1);
+        const color  = getAqhiColor(aqhi);
+        const barH   = Math.max(4, Math.round((aqhi / Math.max(maxVal, 11)) * BAR_MAX));
+        const isNow  = i === 0;
 
         const el = document.createElement('div');
-        el.className = 'fc-hour' + (isNow ? ' active is-now' : '');
-        if (isNow) { el.style.borderColor = color; el.style.color = color; }
+        el.className = 'fc-hour' + (isNow ? ' is-now' : '');
 
         el.innerHTML = `
             <span class="fc-h-time" style="${isNow ? 'color:' + color + ';font-weight:700;' : ''}">${jam}</span>
@@ -423,10 +487,6 @@ function renderTimeline() {
         el.addEventListener('click', () => onTimelineClick(el, item, color));
         container.appendChild(el);
     });
-
-    // Scroll otomatis ke kartu jam sekarang
-    const activeEl = container.querySelector('.fc-hour.active');
-    if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 }
 
 renderTimeline();
