@@ -97,8 +97,11 @@ class Home extends BaseController
                 'pm10'       => round($row['pm10'], 1),
                 'pm1'        => round($row['pm1'], 1),
                 'polutan'    => round($row['polutan'], 1),
-                'o3'         => round($row['o3'], 1),
-                'no2'        => round($row['no2'], 1),
+                // Presisi dinaikkan ke 3 desimal: nilai O3/NO2 biasanya
+                // kecil (mis. 0.04 ppm). round(..., 1) membulatkan jadi
+                // 0.0 dan menghilangkan variasi datanya di grafik.
+                'o3'         => round($row['o3'], 3),
+                'no2'        => round($row['no2'], 3),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
             ];
@@ -145,8 +148,10 @@ class Home extends BaseController
                 'pm10'       => round($row['pm10'], 1),
                 'pm1'        => round($row['pm1'], 1),
                 'polutan'    => round($row['polutan'], 1),
-                'o3'         => round($row['o3'], 1),
-                'no2'        => round($row['no2'], 1),
+                // Presisi dinaikkan ke 3 desimal — lihat catatan di
+                // bagian Hourly History di atas.
+                'o3'         => round($row['o3'], 3),
+                'no2'        => round($row['no2'], 3),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
             ];
@@ -191,8 +196,10 @@ class Home extends BaseController
                 'pm10'       => round($row['pm10'], 1),
                 'pm1'        => round($row['pm1'], 1),
                 'polutan'    => round($row['polutan'], 1),
-                'o3'         => round($row['o3'], 1),
-                'no2'        => round($row['no2'], 1),
+                // Presisi dinaikkan ke 3 desimal — lihat catatan di
+                // bagian Hourly History di atas.
+                'o3'         => round($row['o3'], 3),
+                'no2'        => round($row['no2'], 3),
                 'temp'       => round($row['temp'], 1),
                 'humidity'   => round($row['humidity'], 1),
             ];
@@ -245,8 +252,10 @@ class Home extends BaseController
                 'pm10'     => round((float) $row['pm10'], 1),
                 'pm1'      => round((float) $row['pm1'], 1),
                 'polutan'  => round((float) $row['polutan'], 1),
-                'o3'       => round((float) $row['o3'], 1),
-                'no2'      => round((float) $row['no2'], 1),
+                // Presisi dinaikkan ke 3 desimal — lihat catatan di
+                // bagian Hourly History di atas.
+                'o3'       => round((float) $row['o3'], 3),
+                'no2'      => round((float) $row['no2'], 3),
                 'temp'     => round((float) $row['temp'], 1),
                 'humidity' => round((float) $row['humidity'], 1),
             ];
@@ -283,8 +292,8 @@ class Home extends BaseController
                 'pm10'            => round((float) ($row['pm10'] ?? 0), 1),
                 'pm1'             => round((float) ($row['pm1_0'] ?? 0), 1),
                 'polutan'         => round((float) ($row['pollutant'] ?? 0), 1),
-                'o3'              => round((float) ($row['ozone'] ?? 0), 1),
-                'no2'             => round((float) ($row['no2'] ?? 0), 1),
+                'o3'              => round((float) ($row['ozone'] ?? 0), 3),
+                'no2'             => round((float) ($row['no2'] ?? 0), 3),
                 'temp'            => round((float) ($row['temperature'] ?? 0), 1),
                 'humidity'        => round((float) ($row['humidity'] ?? 0), 1),
                 'days_ahead'      => $row['days_ahead'] ?? null,

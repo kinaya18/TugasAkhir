@@ -134,13 +134,6 @@ function fillHourlyGaps(raw, metricKey) {
     return { labels, values };
 }
 
-/**
- * Mengambil array label dan nilai dari window.DASH sesuai
- * periode (tabKey) dan metrik (metricKey) yang dipilih.
- *
- * Untuk tab "jam": gap waktu yang hilang diisi 0 secara otomatis
- * menggunakan fillHourlyGaps() agar grafik tidak loncat.
- */
 function rwhGetDataset(tabKey, metricKey) {
     // Pilih sumber data sesuai tab
     const raw = tabKey === 'jam'  ? window.DASH.hourlyRaw
@@ -152,13 +145,17 @@ function rwhGetDataset(tabKey, metricKey) {
         return fillHourlyGaps(raw, metricKey);
     }
 
-    // Per hari / bulanan: tampilkan apa adanya (tidak perlu gap-fill)
-    const labels = raw.map(item => {
+    // Per hari / bulanan: data sumber biasanya terurut terbaru→terlama
+    // (DESC, untuk kebutuhan tabel histori), tapi grafik butuh urutan
+    // kronologis terlama→terbaru (kiri ke kanan), jadi dibalik di sini.
+    const ordered = [...raw].reverse();
+
+    const labels = ordered.map(item => {
         if (tabKey === 'hari') return item.date  || item.tanggal || '';
         return item.month || item.bulan || item.date || '';
     });
 
-    const values = raw.map(item => {
+    const values = ordered.map(item => {
         if (metricKey === 'polutan') return parseFloat(item.polutan ?? item.gas ?? 0) || 0;
         return parseFloat(item[metricKey]) || 0;
     });
