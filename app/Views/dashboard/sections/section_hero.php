@@ -136,7 +136,7 @@
                         <span class="gauge-unit">AQI</span>
                     </div>
                 </div>
-                <p class="gauge-label">AQI</p>
+                <p class="gauge-label">Kualitas Udara (AQI)</p>
             </div>
 
             <div class="gauge-card" onclick="openPopup('pm25')">

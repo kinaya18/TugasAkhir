@@ -106,6 +106,7 @@
                             <th>PM1</th>
                             <th>NO<sub>2</sub></th>
                             <th>O<sub>3</sub></th>
+                            <th>POLUTAN</th>
                             <th>TEMP</th>
                             <th>HUMIDITY</th>
                             <th>STATUS</th>
@@ -113,7 +114,7 @@
                     </thead>
                     <tbody id="hd-tbody">
 
-                        <!-- Baris data per jam (dirender dari PHP) -->
+                        <!-- Baris data per jam  -->
                         <?php foreach ($historyHourly as $item): ?>
                         <tr class="<?= !empty($item['is_today']) ? 'today-row' : '' ?>" data-view="jam">
                             <td class="td-time"><?= $item['time']     ?? '--' ?></td>
@@ -124,6 +125,7 @@
                             <td><?= $item['pm1']      ?? '-' ?></td>
                             <td><?= $item['no2']      ?? '-' ?></td>
                             <td><?= $item['o3']       ?? '-' ?></td>
+                            <td><?= $item['polutan']  ?? '-' ?></td>
                             <td><?= $item['temp']     ?? '-' ?>°C</td>
                             <td><?= $item['humidity'] ?? '-' ?>%</td>
                             <td>
@@ -134,7 +136,7 @@
                         </tr>
                         <?php endforeach; ?>
 
-                        <!-- Baris data per hari (disembunyikan secara default) -->
+                        <!-- Baris data per hari  -->
                         <?php foreach ($historyDaily as $item): ?>
                         <tr class="<?= !empty($item['is_today']) ? 'today-row' : '' ?>" data-view="hari" style="display:none;">
                             <td class="td-date"><?= $item['date']     ?? '--' ?></td>
@@ -145,6 +147,7 @@
                             <td><?= $item['pm1']      ?? '-' ?></td>
                             <td><?= $item['no2']      ?? '-' ?></td>
                             <td><?= $item['o3']       ?? '-' ?></td>
+                            <td><?= $item['polutan']  ?? '-' ?></td>
                             <td><?= $item['temp']     ?? '-' ?>°C</td>
                             <td><?= $item['humidity'] ?? '-' ?>%</td>
                             <td>
@@ -240,7 +243,7 @@
                     <option value="no2">NO₂</option>
                     <option value="o3">O₃</option>
                     <option value="pm10">PM10</option>
-                    <option value="polutan">Polutan / VOC</option>
+                    <option value="polutan">Polutan</option>
                     <option value="temp">Suhu</option>
                     <option value="humidity">Kelembapan</option>
                 </select>
