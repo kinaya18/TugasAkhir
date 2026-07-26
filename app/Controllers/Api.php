@@ -1,118 +1,40 @@
 <?php
+// Konfigurasi database
+$servername = "sql308.infinityfree.com";
+$username = "if0_42290825";
+$password = "AcZRMfp9olOdaje";
+$dbname = "if0_42290825_asma_db";
 
-namespace App\Controllers;
+// Buat koneksi
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-use CodeIgniter\API\ResponseTrait;
-use CodeIgniter\Database\Exceptions\DatabaseException;
-use DateTime;
-use DateTimeZone;
-
-class Api extends BaseController
-{
-    use ResponseTrait;
-
-    public function __construct()
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    }
-
-    public function options($any = null)
-    {
-        return $this->response->setStatusCode(200)->setBody('');
-    }
-
-    /**
-     * Mendapatkan timestamp dalam zona waktu GMT-7 (WIB)
-     * @return string Timestamp format Y-m-d H:i:s
-     */
-    private function getWIBTimestamp()
-    {
-        $datetime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-        return $datetime->format('Y-m-d H:i:s');
-    }
-
-    public function insertData()
-    {
-        try {
-            // Get data from request
-            $data = [];
-            
-            if (strtolower($this->request->getMethod()) === 'post') {
-                $json = $this->request->getBody();
-                $data = json_decode($json, true) ?: $this->request->getPost();
-            } else {
-                $data = $this->request->getGet();
-            }
-            
-            // Extract values with defaults
-            $temperature = isset($data['temperature']) ? (float)$data['temperature'] : null;
-            $humidity = isset($data['humidity']) ? (float)$data['humidity'] : null;
-            $pm1_0 = isset($data['pm1_0']) ? (int)$data['pm1_0'] : 0;
-            $pm2_5 = isset($data['pm2_5']) ? (int)$data['pm2_5'] : 0;
-            $pm10 = isset($data['pm10']) ? (int)$data['pm10'] : 0;
-            $pollutant = isset($data['pollutant']) ? (float)$data['pollutant'] : 0;
-            $ozone = isset($data['ozone']) ? (float)$data['ozone'] : 0;
-            $no2 = isset($data['no2']) ? (float)$data['no2'] : 0;
-            
-            // Validate
-            if ($temperature === null || $humidity === null) {
-                return $this->response
-                    ->setStatusCode(400)
-                    ->setJSON([
-                        'success' => false,
-                        'message' => 'Temperature and humidity required',
-                        'received' => $data
-                    ]);
-            }
-            
-            // Direct database insert using Query Builder
-            $db = \Config\Database::connect();
-            
-            $insertData = [
-                'temperature' => $temperature,
-                'humidity' => $humidity,
-                'pm1_0' => $pm1_0,
-                'pm2_5' => $pm2_5,
-                'pm10' => $pm10,
-                'pollutant' => $pollutant,
-                'ozone' => $ozone,
-                'no2' => $no2,
-                'timestamp' => $this->getWIBTimestamp()  // GMT-7 / WIB
-            ];
-            
-            $result = $db->table('data_udara')->insert($insertData);
-            
-            if ($result) {
-                $insertId = $db->insertID();
-                
-                return $this->response
-                    ->setStatusCode(200)
-                    ->setJSON([
-                        'success' => true,
-                        'message' => 'Data inserted successfully',
-                        'id' => $insertId,
-                        'data' => $insertData
-                    ]);
-            } else {
-                return $this->response
-                    ->setStatusCode(500)
-                    ->setJSON([
-                        'success' => false,
-                        'message' => 'Failed to insert data'
-                    ]);
-            }
-            
-        } catch (\Exception $e) {
-            log_message('error', 'API Error: ' . $e->getMessage());
-            
-            return $this->response
-                ->setStatusCode(500)
-                ->setJSON([
-                    'success' => false,
-                    'message' => 'Server error: ' . $e->getMessage()
-                ]);
-        }
-    }
+// Cek koneksi
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+// Ambil data dari GET request
+if(isset($_GET["temperature"]) && isset($_GET["humidity"])) {
+    $temperature = $_GET["temperature"];
+    $humidity = $_GET["humidity"];
+    $pm1_0 = isset($_GET["pm1_0"]) ? $_GET["pm1_0"] : 0;
+    $pm2_5 = isset($_GET["pm2_5"]) ? $_GET["pm2_5"] : 0;
+    $pm10 = isset($_GET["pm10"]) ? $_GET["pm10"] : 0;
+    $co2 = isset($_GET["co2_ppm"]) ? $_GET["co2_ppm"] : 0;
+    $ozone = isset($_GET["ozone_ppm"]) ? $_GET["ozone_ppm"] : 0;
+    $no2 = isset($_GET["no2_ppm"]) ? $_GET["no2_ppm"] : 0;
+    
+    $sql = "INSERT INTO data_udara (temperature, humidity, pm1_0, pm2_5, pm10, co2_ppm, ozone_ppm, no2_ppm) 
+            VALUES ('$temperature', '$humidity', '$pm1_0', '$pm2_5', '$pm10', '$co2', '$ozone', '$no2')";
+    
+    if ($conn->query($sql) === TRUE) {
+        echo "Data inserted successfully!";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+} else {
+    echo "No data received";
+}
+
+$conn->close();
+?>
